@@ -22,6 +22,7 @@ import { TransactionInstructionWithSigners } from '@blockworks-foundation/mangol
 import { createComputeBudgetIx } from '@blockworks-foundation/mango-v4'
 import { BACKUP_CONNECTIONS } from './connection'
 import { ComputeBudgetService } from './services/computeBudget'
+import { assertWritableConnection } from './readOnlyMainnet'
 
 export type WalletSigner = Pick<
   SignerWalletAdapter,
@@ -58,6 +59,7 @@ export const sendTransactionsV3 = async ({
   autoFee?: boolean
   // dynamicComputeUnits?: boolean
 }) => {
+  assertWritableConnection(connection)
   const transactionInstructionsWithFee: TransactionInstructionWithType[] = []
   const fee = await getFeeEstimate(connection)
   for (const tx of transactionInstructions) {

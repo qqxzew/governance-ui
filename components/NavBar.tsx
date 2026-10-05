@@ -5,6 +5,7 @@ import ThemeSwitch from './ThemeSwitch'
 import { ExternalLinkIcon } from '@heroicons/react/outline'
 import DialectNotifications from './Dialect'
 import { useState } from 'react'
+import { APP_SHORT_NAME } from '@constants/branding'
 
 const ConnectWalletButtonDynamic = dynamic(
   async () => await import('./ConnectWalletButton'),
@@ -20,14 +21,9 @@ const NavBar = () => {
       <div className="flex items-center justify-between h-20 col-span-12 px-4 xl:col-start-2 xl:col-span-10 md:px-8 xl:px-4">
         <div className="flex gap-2 sm:gap-8 items-center relative">
           <Link href={fmtUrlWithCluster('/realms')}>
-            <div className="flex cursor-pointer sm:items-center min-w-[36px]">
-              <picture>
-                <source
-                  srcSet="/img/logotype-realms-blue-white.svg"
-                  media="(min-width: 640px)"
-                />
-                <img src="/img/logo-realms.svg" className="w-8 h-8 sm:w-24" />
-              </picture>
+            {/* Text wordmark: this fork does not use the Realms logo. */}
+            <div className="flex cursor-pointer sm:items-center min-w-[36px] text-base sm:text-lg font-bold text-fgd-1 whitespace-nowrap">
+              {APP_SHORT_NAME}
             </div>
           </Link>
           <div

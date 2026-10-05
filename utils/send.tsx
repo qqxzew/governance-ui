@@ -12,6 +12,7 @@ import { WalletSigner } from '@solana/spl-governance'
 import { invalidateInstructionAccounts } from '@hooks/queries/queryClient'
 import { createComputeBudgetIx } from '@blockworks-foundation/mango-v4'
 import { getFeeEstimate } from '@tools/feeEstimate'
+import { assertWritableConnection } from './readOnlyMainnet'
 
 class TransactionError extends Error {
   public txid: string
@@ -71,6 +72,7 @@ export async function signTransaction({
   signers?: Array<Keypair>
   connection: Connection
 }) {
+  assertWritableConnection(connection)
   const [{ blockhash: recentBlockhash }, fee] = await Promise.all([
     connection.getLatestBlockhash('max'),
     getFeeEstimate(connection),
@@ -96,6 +98,7 @@ export async function signTransactions({
   wallet: Wallet
   connection: Connection
 }) {
+  assertWritableConnection(connection)
   const [{ blockhash: recentBlockhash }, fee] = await Promise.all([
     connection.getLatestBlockhash('max'),
     getFeeEstimate(connection),

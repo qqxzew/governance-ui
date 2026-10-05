@@ -1,3 +1,9 @@
+import {
+  APP_NAME,
+  UPSTREAM_ATTRIBUTION,
+  UPSTREAM_REPO_URL,
+} from '@constants/branding';
+
 import cx from '@hub/lib/cx';
 
 interface Props {
@@ -5,7 +11,6 @@ interface Props {
 }
 
 export function GlobalFooter(props: Props) {
-  const year = new Date().getFullYear();
   return (
     <footer
       className={cx(
@@ -33,18 +38,10 @@ export function GlobalFooter(props: Props) {
           'sm:text-sm',
         )}
       >
-        <div>© {year} Realms Today Ltd</div>
+        <div>{APP_NAME}</div>
         <div className="hidden sm:block mx-2">|</div>
-        <a href="https://realms.today/terms" target="_blank" rel="noreferrer">
-          Terms
-        </a>
-        <div className="hidden sm:block mx-2">|</div>
-        <a
-          href="https://realms.today/privacy-policy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Privacy Policy
+        <a href={UPSTREAM_REPO_URL} target="_blank" rel="noreferrer">
+          {UPSTREAM_ATTRIBUTION}
         </a>
       </div>
     </footer>

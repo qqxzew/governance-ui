@@ -7,25 +7,7 @@ import { GlobalHeader } from '@hub/components/GlobalHeader';
 import { MinimalHeader } from '@hub/components/GlobalHeader/MinimalHeader';
 import { RootProvider } from '@hub/providers/Root';
 
-const GoogleTag = React.memo(
-  function GoogleTag() {
-    return (
-      <React.Fragment>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-TG90SK6TGB"
-        />
-        <Script id="gta-hub">{`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-TG90SK6TGB');
-        `}</Script>
-      </React.Fragment>
-    );
-  },
-  () => true,
-);
+// Upstream Google Tag (Realms Today account) removed in this fork.
 
 const Twitter = React.memo(
   function Twitter() {
@@ -164,7 +146,6 @@ export function App(props: Props) {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
-      <GoogleTag />
       <Twitter />
       {props.minimal ? (
         <MinimalHeader className="fixed h-14 top-0 left-0 right-0 z-30" />

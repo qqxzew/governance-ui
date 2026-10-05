@@ -1,3 +1,8 @@
+import {
+  APP_NAME,
+  UPSTREAM_ATTRIBUTION,
+  UPSTREAM_REPO_URL,
+} from '@constants/branding';
 import * as Separator from '@radix-ui/react-separator';
 import Link from 'next/link';
 
@@ -42,18 +47,10 @@ export function GlobalFooter(props: Props) {
           'sm:text-sm',
         )}
       >
-        <div>© 2025 Realms Today Ltd</div>
+        <div>{APP_NAME}</div>
         <div className="hidden sm:block mx-2">|</div>
-        <a href="https://realms.today/terms" target="_blank" rel="noreferrer">
-          Terms
-        </a>
-        <div className="hidden sm:block mx-2">|</div>
-        <a
-          href="https://realms.today/privacy-policy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Privacy Policy
+        <a href={UPSTREAM_REPO_URL} target="_blank" rel="noreferrer">
+          {UPSTREAM_ATTRIBUTION}
         </a>
       </div>
       <div className="text-sm mt-2 text-neutral-900">

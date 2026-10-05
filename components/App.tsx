@@ -2,7 +2,6 @@ import { ThemeProvider } from 'next-themes'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useMemo } from 'react'
 import Head from 'next/head'
-import Script from 'next/script'
 import { useRouter } from 'next/router'
 import { GatewayProvider } from '@components/Gateway/GatewayProvider'
 import { VSR_PLUGIN_PKS } from '@constants/plugins'
@@ -25,7 +24,6 @@ import { useRealmQuery } from '@hooks/queries/realm'
 import { useRealmConfigQuery } from '@hooks/queries/realmConfig'
 import {
   ConnectionProvider,
-  useWallet,
   WalletProvider,
 } from '@solana/wallet-adapter-react'
 import useLegacyConnectionContext from '@hooks/useLegacyConnectionContext'
@@ -39,33 +37,19 @@ import { tryParsePublicKey } from '@tools/core/pubkey'
 import { useAsync } from 'react-async-hook'
 import { useVsrClient } from '../VoterWeightPlugins/useVsrClient'
 import { useRealmVoterWeightPlugins } from '@hooks/useRealmVoterWeightPlugins'
-import TermsPopupModal from './TermsPopup'
-import V2PromoModal from './V2PromoModal'
-import PlausibleProvider from 'next-plausible'
+import EvaluationBanner from './EvaluationBanner'
+import { APP_SHORT_NAME } from '@constants/branding'
+import { installReadOnlyMainnetGuard } from '@utils/readOnlyMainnet'
+
+// NEXT_PUBLIC_READ_ONLY_MAINNET=true: block every mainnet send at the web3.js layer.
+installReadOnlyMainnetGuard()
 
 const Notifications = dynamic(() => import('../components/Notification'), {
   ssr: false,
 })
 
-const GoogleTag = React.memo(
-  function GoogleTag() {
-    return (
-      <React.Fragment>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-TG90SK6TGB"
-        />
-        <Script id="gta-main">{`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-TG90SK6TGB');
-        `}</Script>
-      </React.Fragment>
-    )
-  },
-  () => true,
-)
+// Upstream Google Tag / Plausible analytics (Realms Today accounts) removed:
+// this fork must not report its users to a third party's analytics.
 
 interface Props {
   children: React.ReactNode
@@ -135,7 +119,7 @@ export function AppContents(props: Props) {
   const { vsrClient } = useVsrClient()
 
   const realmName = realmInfo?.displayName ?? realm?.account?.name
-  const title = realmName ? `${realmName}` : 'Realms'
+  const title = realmName ? `${realmName} | ${APP_SHORT_NAME}` : APP_SHORT_NAME
 
   // Note: ?v==${Date.now()} is added to the url to force favicon refresh.
   // Without it browsers would cache the last used and won't change it for different realms
@@ -323,37 +307,10 @@ export function AppContents(props: Props) {
           </>
         )}
       </Head>
-      <GoogleTag />
       <ErrorBoundary>
         <ThemeProvider defaultTheme="Dark">
           <GatewayProvider>
-            <div className="v2-banner relative z-10 text-center w-full py-3">
-              <div className="relative z-10 flex items-center justify-center gap-2 text-white font-medium">
-                <span className="text-white/90">Faster. Sharper. More. Yours.</span>
-                <a
-                  href="https://v2.realms.today"
-                  rel="noreferrer"
-                  target="_blank"
-                  className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-white font-semibold transition-all duration-200"
-                >
-                  Try Realms v2
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <Telemetry></Telemetry>
+            <EvaluationBanner />
             <NavBar />
             <Notifications />
             <TransactionLoader></TransactionLoader>
@@ -361,48 +318,9 @@ export function AppContents(props: Props) {
             <PageBodyContainer>
               <DefiProvider>{props.children}</DefiProvider>
             </PageBodyContainer>
-            <TermsPopupModal />
-            <V2PromoModal />
           </GatewayProvider>
         </ThemeProvider>
       </ErrorBoundary>
     </div>
-  )
-}
-
-const Telemetry = () => {
-  const { wallet } = useWallet()
-
-  const telemetryProps = useMemo(() => {
-    if (typeof document !== 'undefined') {
-      const props = {
-        walletProvider: wallet?.adapter.name ?? 'unknown',
-        walletConnected: (wallet?.adapter.connected ?? 'false').toString(),
-      }
-
-      // Hack to update script tag
-      const el = document.getElementById('plausible')
-      if (el) {
-        Object.entries(props).forEach(([key, value]) => {
-          el.setAttribute(`event-${key}`, value)
-        })
-      }
-
-      return props
-    } else {
-      return {}
-    }
-  }, [wallet?.adapter.name, wallet?.adapter.connected])
-
-  return (
-    <PlausibleProvider
-      domain="realms.today"
-      customDomain="https://pl.cabana-exchange.cloud"
-      trackLocalhost={true}
-      selfHosted={true}
-      enabled={true}
-      scriptProps={{ id: 'plausible' }}
-      pageviewProps={telemetryProps}
-    />
   )
 }

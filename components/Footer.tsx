@@ -1,9 +1,13 @@
-import Link from 'next/link'
 import cx from 'classnames'
 import { ExternalLinkIcon } from '@heroicons/react/outline'
 
 import SocialIcons from '@components/SocialIcons'
 import { useEffect, useState } from 'react'
+import {
+  APP_NAME,
+  UPSTREAM_ATTRIBUTION,
+  UPSTREAM_REPO_URL,
+} from '@constants/branding'
 
 const Footer = () => {
   const { REALM } = process.env
@@ -65,15 +69,16 @@ const Footer = () => {
         >
           <SocialIcons className="mb-5" />
           <div className="flex flex-col justify-center sm:space-x-2 text-center text-sm opacity-70 sm:flex-row sm:text-sm sm:text-left">
-            <div className="flex-shrink-0">© 2025 Realms Today Ltd</div>
+            <div className="flex-shrink-0">{APP_NAME}</div>
             <span className="hidden sm:block mx-2">|</span>
-            <Link href="https://realms.today/terms" passHref>
-              <a className="flex-shrink-0 whitespace-nowrap">Terms</a>
-            </Link>
-            <span className="hidden sm:block mx-2">|</span>
-            <Link href="https://realms.today/privacy-policy" passHref>
-              <a className="flex-shrink-0 whitespace-nowrap">Privacy Policy</a>
-            </Link>
+            <a
+              className="flex-shrink-0 whitespace-nowrap"
+              href={UPSTREAM_REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {UPSTREAM_ATTRIBUTION}
+            </a>
           </div>
         </div>
 

@@ -18,6 +18,7 @@ import {
   MAXIMUM_NUMBER_OF_BLOCKS_FOR_TRANSACTION,
   sleep,
 } from '@blockworks-foundation/mangolana/lib/tools'
+import { assertWritableConnection } from './readOnlyMainnet'
 import {
   BlockHeightStrategy,
   BlockHeightStrategyClass,
@@ -405,6 +406,7 @@ export const sendSignAndConfirmTransactions = async ({
   },
   lookupTableAccounts,
 }: sendSignAndConfirmTransactionsProps) => {
+  assertWritableConnection(connection)
   const logger = new Logger({ ...config })
   const block =
     timeoutStrategy?.block ?? (await connection.getLatestBlockhash('confirmed'))
