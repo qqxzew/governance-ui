@@ -75,7 +75,6 @@ jest.mock('../useVsrVoterState', () => ({
   }),
 }))
 
-// eslint-disable-next-line import/first
 import VotingPowerCard, { fmtNative } from '../index'
 
 describe('VotingPowerCard', () => {
