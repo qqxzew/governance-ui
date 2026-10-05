@@ -39,6 +39,8 @@ export function loadDotEnv(file = path.resolve(process.cwd(), '.env')) {
 
 export interface BotConfig {
   token: string | undefined
+  /** Bot API base URL; override only for a self-hosted Bot API server or a local mock */
+  telegramApiBase: string
   rpcUrl: string
   appUrl: string
   pollSeconds: number
@@ -75,12 +77,22 @@ export function readConfig(): BotConfig {
   if (!/^https?:\/\/[^\s]+$/.test(appUrl)) {
     throw new Error('APP_URL must start with http:// or https://')
   }
+  const telegramApiBase = (
+    process.env.TELEGRAM_API_BASE || 'https://api.telegram.org'
+  ).replace(/\/+$/, '')
+  if (
+    !/^https:\/\/[^\s/]+$/.test(telegramApiBase) &&
+    !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(telegramApiBase)
+  ) {
+    throw new Error('TELEGRAM_API_BASE must be https://<host> or http://localhost:<port>')
+  }
   const rpcUrl = process.env.BOT_RPC_URL || 'https://api.mainnet-beta.solana.com'
   if (!/^https?:\/\//.test(rpcUrl)) {
     throw new Error('BOT_RPC_URL must start with http:// or https://')
   }
   return {
     token: process.env.TELEGRAM_BOT_TOKEN || undefined,
+    telegramApiBase,
     rpcUrl,
     appUrl,
     pollSeconds: intEnv('BOT_POLL_SECONDS', 60, 10, 86400),

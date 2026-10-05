@@ -168,7 +168,18 @@ class Bot {
   }
 
   async start(once: boolean) {
-    const me = await this.tg.getMe()
+    let me
+    for (let attempt = 1; ; attempt++) {
+      try {
+        me = await this.tg.getMe()
+        break
+      } catch (e) {
+        if ((e instanceof TelegramError && e.code === 401) || attempt >= 10) throw e
+        const wait = Math.min(60_000, 2000 * 2 ** attempt)
+        this.log(`[tg] getMe failed: ${redact(e, [this.cfg.token])}; retry in ${wait} ms`)
+        await sleep(wait)
+      }
+    }
     this.username = me.username
     this.log(`[bot] @${me.username} up; ${Object.keys(this.state.realms).length} watched realm(s); poll every ${this.cfg.pollSeconds}s; RPC ${redactUrl(this.cfg.rpcUrl)}`)
     if (once) {
@@ -208,7 +219,7 @@ class Bot {
     const chatId = msg.chat.id
     const cmd = parseCommand(msg.text, this.username)
     if (!cmd) {
-      if (msg.chat.type === 'private' && msg.text) await this.reply(chatId, 'Send /help for the list of commands.', msg.message_id)
+      if (msg.chat.type === 'private' && msg.text && !msg.text.trim().startsWith('/')) await this.reply(chatId, 'Send /help for the list of commands.', msg.message_id)
       return
     }
     if (this.cfg.allowedChats && !this.cfg.allowedChats.has(chatId)) {
@@ -316,7 +327,7 @@ async function main() {
   }
   const registry = loadRegistry()
   const conn = makeConnection(cfg.rpcUrl, { log })
-  const tg = new TelegramClient(cfg.token)
+  const tg = new TelegramClient(cfg.token, cfg.telegramApiBase)
   const bot = new Bot(cfg, tg, conn, registry, pollDeps(conn, cfg, registry, log))
   const shutdown = () => {
     log('[bot] shutting down')
