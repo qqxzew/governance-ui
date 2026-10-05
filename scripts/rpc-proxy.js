@@ -47,15 +47,29 @@ function canonicalize(value) {
     return JSON.stringify(value === undefined ? null : value)
   }
   if (Array.isArray(value)) {
-    return '[' + value.map((v) => canonicalize(v === undefined ? null : v)).join(',') + ']'
+    return (
+      '[' +
+      value.map((v) => canonicalize(v === undefined ? null : v)).join(',') +
+      ']'
+    )
   }
   const keys = Object.keys(value)
     .filter((k) => value[k] !== undefined)
     .sort()
-  return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalize(value[k])).join(',') + '}'
+  return (
+    '{' +
+    keys
+      .map((k) => JSON.stringify(k) + ':' + canonicalize(value[k]))
+      .join(',') +
+    '}'
+  )
 }
 
-const LOOSE_IGNORED_FIELDS = new Set(['commitment', 'minContextSlot', 'preflightCommitment'])
+const LOOSE_IGNORED_FIELDS = new Set([
+  'commitment',
+  'minContextSlot',
+  'preflightCommitment',
+])
 
 /** Strip fields that do not change *what* is read (only how fresh it is). */
 function loosenParams(params) {
@@ -80,7 +94,9 @@ function trimTrailingEmpty(params) {
     const empty =
       last === null ||
       last === undefined ||
-      (typeof last === 'object' && !Array.isArray(last) && Object.keys(last).length === 0)
+      (typeof last === 'object' &&
+        !Array.isArray(last) &&
+        Object.keys(last).length === 0)
     if (!empty) break
     p.pop()
   }
@@ -100,7 +116,11 @@ function requestKey(req) {
 /** Loose key: also ignores commitment/minContextSlot and empty trailing config. */
 function looseRequestKey(req) {
   const params = req.params === undefined ? [] : req.params
-  return hash(String(req.method) + '\n' + canonicalize(trimTrailingEmpty(loosenParams(params))))
+  return hash(
+    String(req.method) +
+      '\n' +
+      canonicalize(trimTrailingEmpty(loosenParams(params))),
+  )
 }
 
 // Methods whose answer changes every slot. In replay, if the exact request
@@ -130,7 +150,13 @@ const SEND_METHODS = new Set(['sendTransaction', 'requestAirdrop'])
 // -------------------------------------------------------------- snapshot ---
 
 function emptySnapshot() {
-  return { version: 1, createdAt: new Date().toISOString(), entries: {}, loose: {}, latest: {} }
+  return {
+    version: 1,
+    createdAt: new Date().toISOString(),
+    entries: {},
+    loose: {},
+    latest: {},
+  }
 }
 
 function loadSnapshot(file, { mustExist }) {
@@ -160,15 +186,27 @@ function recordEntry(snap, req, response) {
   const hasError = Object.prototype.hasOwnProperty.call(response, 'error')
   if (!hasResult && !hasError) return false
   // Never record rate-limit / transient upstream errors as truth.
-  if (hasError && response.error && [429, -32005, -32004, -32007].includes(response.error.code)) return false
+  if (
+    hasError &&
+    response.error &&
+    [429, -32005, -32004, -32007].includes(response.error.code)
+  )
+    return false
   const key = requestKey(req)
   const existing = snap.entries[key]
   // Keep a good result over a later error.
-  if (existing && hasError && Object.prototype.hasOwnProperty.call(existing.response, 'result')) return false
+  if (
+    existing &&
+    hasError &&
+    Object.prototype.hasOwnProperty.call(existing.response, 'result')
+  )
+    return false
   snap.entries[key] = {
     method: req.method,
     params: req.params === undefined ? [] : req.params,
-    response: hasResult ? { result: response.result } : { error: response.error },
+    response: hasResult
+      ? { result: response.result }
+      : { error: response.error },
     recordedAt: new Date().toISOString(),
   }
   snap.loose[looseRequestKey(req)] = key
@@ -183,20 +221,29 @@ function recordEntry(snap, req, response) {
  */
 function replayLookup(snap, req) {
   const id = req.id === undefined ? null : req.id
-  const wrap = (entry, source) => ({ response: { jsonrpc: '2.0', id, ...entry.response }, source })
+  const wrap = (entry, source) => ({
+    response: { jsonrpc: '2.0', id, ...entry.response },
+    source,
+  })
   const exact = snap.entries[requestKey(req)]
   if (exact) return wrap(exact, 'exact')
   const looseKey = snap.loose[looseRequestKey(req)]
-  if (looseKey && snap.entries[looseKey]) return wrap(snap.entries[looseKey], 'loose')
+  if (looseKey && snap.entries[looseKey])
+    return wrap(snap.entries[looseKey], 'loose')
   if (VOLATILE_METHODS.has(req.method)) {
     const latestKey = snap.latest[req.method]
-    if (latestKey && snap.entries[latestKey]) return wrap(snap.entries[latestKey], 'latest')
+    if (latestKey && snap.entries[latestKey])
+      return wrap(snap.entries[latestKey], 'latest')
   }
   return null
 }
 
 function rpcError(id, code, message) {
-  return { jsonrpc: '2.0', id: id === undefined ? null : id, error: { code, message } }
+  return {
+    jsonrpc: '2.0',
+    id: id === undefined ? null : id,
+    error: { code, message },
+  }
 }
 
 // --------------------------------------------------------------- upstream ---
@@ -221,13 +268,18 @@ function forward(upstream, body, attempt = 0) {
         path: u.pathname + u.search,
         method: 'POST',
         // No Origin / Referer: the public RPC rejects browser origins.
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body),
+        },
         timeout: 60000,
       },
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, body: Buffer.concat(chunks) }))
+        res.on('end', () =>
+          resolve({ status: res.statusCode, body: Buffer.concat(chunks) }),
+        )
       },
     )
     req.on('timeout', () => req.destroy(new Error('upstream timeout')))
@@ -255,10 +307,17 @@ function parseArgs(argv, env) {
   const port = Number(get('--port') || env.PORT || 8898)
   const opts = {
     mode: get('--mode') || env.RPC_PROXY_MODE || 'live',
-    snapshot: path.resolve(get('--snapshot') || env.RPC_SNAPSHOT || 'demo/snapshot/rpc.json'),
+    snapshot: path.resolve(
+      get('--snapshot') || env.RPC_SNAPSHOT || 'demo/snapshot/rpc.json',
+    ),
     port,
-    wsPort: has('--no-ws') ? null : Number(get('--ws-port') || env.WS_PORT || port + 1),
-    upstream: get('--upstream') || env.UPSTREAM || 'https://api.mainnet-beta.solana.com',
+    wsPort: has('--no-ws')
+      ? null
+      : Number(get('--ws-port') || env.WS_PORT || port + 1),
+    upstream:
+      get('--upstream') ||
+      env.UPSTREAM ||
+      'https://api.mainnet-beta.solana.com',
     allowSend: has('--allow-send') || env.RPC_ALLOW_SEND === 'true',
     quiet: has('--quiet'),
   }
@@ -280,8 +339,18 @@ const CORS = {
 function createProxy(opts) {
   const { mode } = opts
   const snap =
-    mode === 'live' ? null : loadSnapshot(opts.snapshot, { mustExist: mode === 'replay' })
-  const stats = { requests: 0, hits: 0, loose: 0, latest: 0, misses: 0, recorded: 0, missList: [] }
+    mode === 'live'
+      ? null
+      : loadSnapshot(opts.snapshot, { mustExist: mode === 'replay' })
+  const stats = {
+    requests: 0,
+    hits: 0,
+    loose: 0,
+    latest: 0,
+    misses: 0,
+    recorded: 0,
+    missList: [],
+  }
   const log = (...a) => {
     if (!opts.quiet) console.log(new Date().toISOString(), ...a)
   }
@@ -311,7 +380,11 @@ function createProxy(opts) {
 
   function answerReplay(r) {
     if (blockedSend(r)) {
-      return rpcError(r.id, -32003, 'rpc-proxy: sendTransaction is disabled (read-only demo)')
+      return rpcError(
+        r.id,
+        -32003,
+        'rpc-proxy: sendTransaction is disabled (read-only demo)',
+      )
     }
     const hit = replayLookup(snap, r)
     if (hit) {
@@ -323,8 +396,17 @@ function createProxy(opts) {
     stats.misses++
     const miss = { method: r.method, params: r.params }
     if (stats.missList.length < 500) stats.missList.push(miss)
-    console.warn(new Date().toISOString(), 'REPLAY MISS', r.method, JSON.stringify(r.params || []).slice(0, 300))
-    return rpcError(r.id, -32001, `rpc-proxy replay: no recorded response for ${r.method}`)
+    console.warn(
+      new Date().toISOString(),
+      'REPLAY MISS',
+      r.method,
+      JSON.stringify(r.params || []).slice(0, 300),
+    )
+    return rpcError(
+      r.id,
+      -32001,
+      `rpc-proxy replay: no recorded response for ${r.method}`,
+    )
   }
 
   async function handleRpc(parsed, rawBody) {
@@ -341,12 +423,21 @@ function createProxy(opts) {
     const blocked = reqs.filter(blockedSend)
     const toForward = reqs.filter((r) => !blockedSend(r))
     const blockedResponses = blocked.map((r) =>
-      rpcError(r.id, -32003, 'rpc-proxy: sendTransaction is disabled (start with --allow-send)'),
+      rpcError(
+        r.id,
+        -32003,
+        'rpc-proxy: sendTransaction is disabled (start with --allow-send)',
+      ),
     )
     if (!toForward.length) {
-      return { status: 200, body: JSON.stringify(isBatch ? blockedResponses : blockedResponses[0]) }
+      return {
+        status: 200,
+        body: JSON.stringify(isBatch ? blockedResponses : blockedResponses[0]),
+      }
     }
-    const body = blocked.length ? JSON.stringify(isBatch ? toForward : toForward[0]) : rawBody
+    const body = blocked.length
+      ? JSON.stringify(isBatch ? toForward : toForward[0])
+      : rawBody
     const r = await forward(opts.upstream, body)
     if (mode === 'record' && r.status === 200) {
       try {
@@ -371,7 +462,9 @@ function createProxy(opts) {
     let merged
     try {
       const resp = JSON.parse(r.body.toString())
-      merged = isBatch ? [...(Array.isArray(resp) ? resp : [resp]), ...blockedResponses] : resp
+      merged = isBatch
+        ? [...(Array.isArray(resp) ? resp : [resp]), ...blockedResponses]
+        : resp
     } catch {
       return { status: r.status, body: r.body }
     }
@@ -390,7 +483,10 @@ function createProxy(opts) {
         upstream: mode === 'replay' ? null : redact(opts.upstream),
         snapshot: mode === 'live' ? null : opts.snapshot,
         entries: snap ? Object.keys(snap.entries).length : null,
-        stats: { ...stats, missList: req.url.includes('misses') ? stats.missList : undefined },
+        stats: {
+          ...stats,
+          missList: req.url.includes('misses') ? stats.missList : undefined,
+        },
       }
       res.writeHead(200, { ...CORS, 'Content-Type': 'application/json' })
       return res.end(JSON.stringify(info, null, 2))
@@ -412,15 +508,24 @@ function createProxy(opts) {
       }
       try {
         const out = await handleRpc(parsed, raw)
-        const label = Array.isArray(parsed) ? `batch(${parsed.length})` : parsed && parsed.method
+        const label = Array.isArray(parsed)
+          ? `batch(${parsed.length})`
+          : parsed && parsed.method
         log(out.status, mode, label)
-        res.writeHead(out.status, { ...CORS, 'Content-Type': 'application/json' })
+        res.writeHead(out.status, {
+          ...CORS,
+          'Content-Type': 'application/json',
+        })
         res.end(out.body)
       } catch (e) {
         console.error(new Date().toISOString(), 'ERR', e.message)
         res.writeHead(502, { ...CORS, 'Content-Type': 'application/json' })
         const id = parsed && !Array.isArray(parsed) ? parsed.id : null
-        res.end(JSON.stringify(rpcError(id, -32002, 'rpc-proxy upstream error: ' + e.message)))
+        res.end(
+          JSON.stringify(
+            rpcError(id, -32002, 'rpc-proxy upstream error: ' + e.message),
+          ),
+        )
       }
     })
   })
@@ -439,7 +544,9 @@ function startWebSocket(opts) {
   try {
     WebSocket = require('ws')
   } catch {
-    console.warn('ws package not found; WebSocket port disabled (subscriptions will fail, HTTP reads still work)')
+    console.warn(
+      'ws package not found; WebSocket port disabled (subscriptions will fail, HTTP reads still work)',
+    )
     return null
   }
   const wss = new WebSocket.Server({ port: opts.wsPort })
@@ -456,13 +563,20 @@ function startWebSocket(opts) {
         }
         const list = Array.isArray(msgs) ? msgs : [msgs]
         const out = list.map((m) => {
-          if (typeof m.method === 'string' && m.method.endsWith('Unsubscribe')) {
+          if (
+            typeof m.method === 'string' &&
+            m.method.endsWith('Unsubscribe')
+          ) {
             return { jsonrpc: '2.0', id: m.id, result: true }
           }
           if (typeof m.method === 'string' && m.method.endsWith('Subscribe')) {
             return { jsonrpc: '2.0', id: m.id, result: nextSubId++ }
           }
-          return rpcError(m.id, -32601, 'rpc-proxy replay ws: method not supported')
+          return rpcError(
+            m.id,
+            -32601,
+            'rpc-proxy replay ws: method not supported',
+          )
         })
         client.send(JSON.stringify(Array.isArray(msgs) ? out : out[0]))
       })
@@ -471,7 +585,10 @@ function startWebSocket(opts) {
     const up = new WebSocket(upstreamWs) // no Origin header from Node
     const pending = []
     up.on('open', () => pending.splice(0).forEach((m) => up.send(m)))
-    up.on('message', (d) => client.readyState === 1 && client.send(d.toString()))
+    up.on(
+      'message',
+      (d) => client.readyState === 1 && client.send(d.toString()),
+    )
     up.on('close', () => client.close())
     up.on('error', (e) => {
       console.warn('upstream ws error:', e.message)
@@ -484,7 +601,11 @@ function startWebSocket(opts) {
     })
     client.on('close', () => up.close())
   })
-  wss.on('error', (e) => console.warn(`ws port ${opts.wsPort}: ${e.message} (subscriptions disabled)`))
+  wss.on('error', (e) =>
+    console.warn(
+      `ws port ${opts.wsPort}: ${e.message} (subscriptions disabled)`,
+    ),
+  )
   return wss
 }
 
@@ -498,7 +619,9 @@ function main() {
     console.log(
       `rpc-proxy [${opts.mode}] http://localhost:${opts.port}` +
         (opts.wsPort ? ` ws://localhost:${opts.wsPort}` : '') +
-        ` -> ${opts.mode === 'record' ? redact(opts.upstream) + ' => ' : ''}${where}` +
+        ` -> ${
+          opts.mode === 'record' ? redact(opts.upstream) + ' => ' : ''
+        }${where}` +
         (snap ? ` (${Object.keys(snap.entries).length} entries)` : ''),
     )
   })

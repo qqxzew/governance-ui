@@ -27,6 +27,10 @@ config = withTM({
 
   pageExtensions: ['mdx', 'md', 'jsx', 'tsx', 'api.ts'], // .ts files are not pages
 
+  // Separate output dir lets a production build / second dev server run next
+  // to a running `next dev` without clobbering its .next folder.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
 

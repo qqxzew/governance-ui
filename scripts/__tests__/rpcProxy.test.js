@@ -27,39 +27,90 @@ describe('canonical keying', () => {
   })
 
   test('jsonrpc id and version are ignored', () => {
-    const a = { jsonrpc: '2.0', id: 1, method: 'getAccountInfo', params: [PK, { encoding: 'base64' }] }
-    const b = { jsonrpc: '2.0', id: 'abc', method: 'getAccountInfo', params: [PK, { encoding: 'base64' }] }
+    const a = {
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getAccountInfo',
+      params: [PK, { encoding: 'base64' }],
+    }
+    const b = {
+      jsonrpc: '2.0',
+      id: 'abc',
+      method: 'getAccountInfo',
+      params: [PK, { encoding: 'base64' }],
+    }
     expect(requestKey(a)).toBe(requestKey(b))
   })
 
   test('param key order does not matter', () => {
-    const a = { method: 'getProgramAccounts', params: [PK, { encoding: 'base64', filters: [{ memcmp: { offset: 0, bytes: 'x' } }] }] }
-    const b = { method: 'getProgramAccounts', params: [PK, { filters: [{ memcmp: { bytes: 'x', offset: 0 } }], encoding: 'base64' }] }
+    const a = {
+      method: 'getProgramAccounts',
+      params: [
+        PK,
+        {
+          encoding: 'base64',
+          filters: [{ memcmp: { offset: 0, bytes: 'x' } }],
+        },
+      ],
+    }
+    const b = {
+      method: 'getProgramAccounts',
+      params: [
+        PK,
+        {
+          filters: [{ memcmp: { bytes: 'x', offset: 0 } }],
+          encoding: 'base64',
+        },
+      ],
+    }
     expect(requestKey(a)).toBe(requestKey(b))
   })
 
   test('method and params values matter', () => {
     const base = { method: 'getAccountInfo', params: [PK] }
-    expect(requestKey(base)).not.toBe(requestKey({ method: 'getBalance', params: [PK] }))
-    expect(requestKey(base)).not.toBe(requestKey({ method: 'getAccountInfo', params: ['other'] }))
+    expect(requestKey(base)).not.toBe(
+      requestKey({ method: 'getBalance', params: [PK] }),
+    )
+    expect(requestKey(base)).not.toBe(
+      requestKey({ method: 'getAccountInfo', params: ['other'] }),
+    )
     // array order is significant
-    expect(requestKey({ method: 'm', params: [1, 2] })).not.toBe(requestKey({ method: 'm', params: [2, 1] }))
+    expect(requestKey({ method: 'm', params: [1, 2] })).not.toBe(
+      requestKey({ method: 'm', params: [2, 1] }),
+    )
   })
 
   test('missing params equals empty params', () => {
-    expect(requestKey({ method: 'getSlot' })).toBe(requestKey({ method: 'getSlot', params: [] }))
+    expect(requestKey({ method: 'getSlot' })).toBe(
+      requestKey({ method: 'getSlot', params: [] }),
+    )
   })
 
   test('loose key ignores commitment / minContextSlot / empty config', () => {
-    const a = { method: 'getAccountInfo', params: [PK, { encoding: 'base64', commitment: 'confirmed' }] }
-    const b = { method: 'getAccountInfo', params: [PK, { encoding: 'base64', commitment: 'processed', minContextSlot: 5 }] }
+    const a = {
+      method: 'getAccountInfo',
+      params: [PK, { encoding: 'base64', commitment: 'confirmed' }],
+    }
+    const b = {
+      method: 'getAccountInfo',
+      params: [
+        PK,
+        { encoding: 'base64', commitment: 'processed', minContextSlot: 5 },
+      ],
+    }
     expect(requestKey(a)).not.toBe(requestKey(b))
     expect(looseRequestKey(a)).toBe(looseRequestKey(b))
-    expect(looseRequestKey({ method: 'getSlot', params: [{ commitment: 'confirmed' }] })).toBe(
-      looseRequestKey({ method: 'getSlot' }),
-    )
+    expect(
+      looseRequestKey({
+        method: 'getSlot',
+        params: [{ commitment: 'confirmed' }],
+      }),
+    ).toBe(looseRequestKey({ method: 'getSlot' }))
     // but not encoding
-    const c = { method: 'getAccountInfo', params: [PK, { encoding: 'jsonParsed' }] }
+    const c = {
+      method: 'getAccountInfo',
+      params: [PK, { encoding: 'jsonParsed' }],
+    }
     expect(looseRequestKey(a)).not.toBe(looseRequestKey(c))
   })
 })
@@ -67,31 +118,73 @@ describe('canonical keying', () => {
 describe('record + replay lookup', () => {
   test('replay preserves the caller id and serves exact, loose and latest hits', () => {
     const snap = emptySnapshot()
-    recordEntry(snap, { id: 7, method: 'getAccountInfo', params: [PK, { commitment: 'confirmed' }] }, { jsonrpc: '2.0', id: 7, result: { value: 1 } })
-    recordEntry(snap, { id: 8, method: 'getSlot', params: [] }, { jsonrpc: '2.0', id: 8, result: 100 })
-    recordEntry(snap, { id: 9, method: 'getSlot', params: [] }, { jsonrpc: '2.0', id: 9, result: 101 })
+    recordEntry(
+      snap,
+      {
+        id: 7,
+        method: 'getAccountInfo',
+        params: [PK, { commitment: 'confirmed' }],
+      },
+      { jsonrpc: '2.0', id: 7, result: { value: 1 } },
+    )
+    recordEntry(
+      snap,
+      { id: 8, method: 'getSlot', params: [] },
+      { jsonrpc: '2.0', id: 8, result: 100 },
+    )
+    recordEntry(
+      snap,
+      { id: 9, method: 'getSlot', params: [] },
+      { jsonrpc: '2.0', id: 9, result: 101 },
+    )
 
-    const exact = replayLookup(snap, { jsonrpc: '2.0', id: 'x', method: 'getAccountInfo', params: [PK, { commitment: 'confirmed' }] })
+    const exact = replayLookup(snap, {
+      jsonrpc: '2.0',
+      id: 'x',
+      method: 'getAccountInfo',
+      params: [PK, { commitment: 'confirmed' }],
+    })
     expect(exact.source).toBe('exact')
-    expect(exact.response).toEqual({ jsonrpc: '2.0', id: 'x', result: { value: 1 } })
+    expect(exact.response).toEqual({
+      jsonrpc: '2.0',
+      id: 'x',
+      result: { value: 1 },
+    })
 
-    const loose = replayLookup(snap, { id: 3, method: 'getAccountInfo', params: [PK, { commitment: 'processed' }] })
+    const loose = replayLookup(snap, {
+      id: 3,
+      method: 'getAccountInfo',
+      params: [PK, { commitment: 'processed' }],
+    })
     expect(loose.source).toBe('loose')
     expect(loose.response.id).toBe(3)
 
-    const latest = replayLookup(snap, { id: 4, method: 'getSlot', params: [{ commitment: 'finalized', minContextSlot: 1, foo: 1 }] })
+    const latest = replayLookup(snap, {
+      id: 4,
+      method: 'getSlot',
+      params: [{ commitment: 'finalized', minContextSlot: 1, foo: 1 }],
+    })
     expect(latest.source).toBe('latest')
     expect(latest.response.result).toBe(101)
 
-    expect(replayLookup(snap, { id: 5, method: 'getBalance', params: [PK] })).toBeNull()
+    expect(
+      replayLookup(snap, { id: 5, method: 'getBalance', params: [PK] }),
+    ).toBeNull()
   })
 
   test('rate-limit errors are not recorded; a result is not overwritten by an error', () => {
     const snap = emptySnapshot()
     const q = { id: 1, method: 'getBalance', params: [PK] }
-    expect(recordEntry(snap, q, { id: 1, error: { code: 429, message: 'Too many requests' } })).toBe(false)
+    expect(
+      recordEntry(snap, q, {
+        id: 1,
+        error: { code: 429, message: 'Too many requests' },
+      }),
+    ).toBe(false)
     expect(recordEntry(snap, q, { id: 1, result: { value: 5 } })).toBe(true)
-    expect(recordEntry(snap, q, { id: 1, error: { code: -32602, message: 'bad' } })).toBe(false)
+    expect(
+      recordEntry(snap, q, { id: 1, error: { code: -32602, message: 'bad' } }),
+    ).toBe(false)
     expect(replayLookup(snap, q).response.result).toEqual({ value: 5 })
   })
 
@@ -111,11 +204,26 @@ function post(port, body) {
   return new Promise((resolve, reject) => {
     const data = JSON.stringify(body)
     const req = http.request(
-      { host: '127.0.0.1', port, method: 'POST', path: '/', headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' } },
+      {
+        host: '127.0.0.1',
+        port,
+        method: 'POST',
+        path: '/',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'http://localhost:3000',
+        },
+      },
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, json: JSON.parse(Buffer.concat(chunks).toString()) }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            headers: res.headers,
+            json: JSON.parse(Buffer.concat(chunks).toString()),
+          }),
+        )
       },
     )
     req.on('error', reject)
@@ -124,7 +232,9 @@ function post(port, body) {
 }
 
 function listen(server) {
-  return new Promise((r) => server.listen(0, '127.0.0.1', () => r(server.address().port)))
+  return new Promise((r) =>
+    server.listen(0, '127.0.0.1', () => r(server.address().port)),
+  )
 }
 
 describe('proxy end-to-end (fake upstream)', () => {
@@ -141,9 +251,15 @@ describe('proxy end-to-end (fake upstream)', () => {
       req.on('data', (c) => chunks.push(c))
       req.on('end', () => {
         const body = JSON.parse(Buffer.concat(chunks).toString())
-        const answer = (q) => ({ jsonrpc: '2.0', id: q.id, result: { method: q.method, echo: q.params || [] } })
+        const answer = (q) => ({
+          jsonrpc: '2.0',
+          id: q.id,
+          result: { method: q.method, echo: q.params || [] },
+        })
         // reply to batches in reverse order to prove id matching
-        const out = Array.isArray(body) ? body.map(answer).reverse() : answer(body)
+        const out = Array.isArray(body)
+          ? body.map(answer).reverse()
+          : answer(body)
         res.writeHead(200, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify(out))
       })
@@ -158,10 +274,21 @@ describe('proxy end-to-end (fake upstream)', () => {
 
   test('record (single + batch) then replay offline', async () => {
     const snapshot = path.join(tmp, 'rpc.json')
-    const rec = createProxy({ mode: 'record', snapshot, upstream: `http://127.0.0.1:${upstreamPort}`, allowSend: false, quiet: true })
+    const rec = createProxy({
+      mode: 'record',
+      snapshot,
+      upstream: `http://127.0.0.1:${upstreamPort}`,
+      allowSend: false,
+      quiet: true,
+    })
     const recPort = await listen(rec.server)
 
-    const single = await post(recPort, { jsonrpc: '2.0', id: 1, method: 'getAccountInfo', params: [PK] })
+    const single = await post(recPort, {
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'getAccountInfo',
+      params: [PK],
+    })
     expect(single.json.result.method).toBe('getAccountInfo')
     expect(single.headers['access-control-allow-origin']).toBe('*')
     expect(seenOrigins.every((o) => o === undefined)).toBe(true)
@@ -172,7 +299,12 @@ describe('proxy end-to-end (fake upstream)', () => {
     ])
     expect(batch.json).toHaveLength(2)
 
-    const send = await post(recPort, { jsonrpc: '2.0', id: 2, method: 'sendTransaction', params: ['AAAA'] })
+    const send = await post(recPort, {
+      jsonrpc: '2.0',
+      id: 2,
+      method: 'sendTransaction',
+      params: ['AAAA'],
+    })
     expect(send.json.error.code).toBe(-32003)
 
     rec.flush()
@@ -185,11 +317,25 @@ describe('proxy end-to-end (fake upstream)', () => {
     const rep = createProxy({ mode: 'replay', snapshot, quiet: true })
     const repPort = await listen(rep.server)
 
-    const r1 = await post(repPort, { jsonrpc: '2.0', id: 'abc', method: 'getAccountInfo', params: [PK] })
-    expect(r1.json).toEqual({ jsonrpc: '2.0', id: 'abc', result: { method: 'getAccountInfo', echo: [PK] } })
+    const r1 = await post(repPort, {
+      jsonrpc: '2.0',
+      id: 'abc',
+      method: 'getAccountInfo',
+      params: [PK],
+    })
+    expect(r1.json).toEqual({
+      jsonrpc: '2.0',
+      id: 'abc',
+      result: { method: 'getAccountInfo', echo: [PK] },
+    })
 
     const r2 = await post(repPort, [
-      { jsonrpc: '2.0', id: 21, method: 'getSlot', params: [{ commitment: 'confirmed' }] },
+      {
+        jsonrpc: '2.0',
+        id: 21,
+        method: 'getSlot',
+        params: [{ commitment: 'confirmed' }],
+      },
       { jsonrpc: '2.0', id: 20, method: 'getBalance', params: [PK] },
       { jsonrpc: '2.0', id: 22, method: 'getMultipleAccounts', params: [[PK]] },
     ])
