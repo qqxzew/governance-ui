@@ -31,6 +31,20 @@ config = withTM({
   // to a running `next dev` without clobbering its .next folder.
   distDir: process.env.NEXT_DIST_DIR || '.next',
 
+  // "Collecting page data" loads every page bundle in worker processes. With
+  // one worker per CPU on a 16 GB laptop this swaps and hits the 60 s default
+  // timeout ("Collecting page data ... is still timing out"). Fewer workers
+  // and a longer timeout make local builds reliable; override via env.
+  staticPageGenerationTimeout: Number(
+    process.env.NEXT_STATIC_PAGE_TIMEOUT || 600,
+  ),
+  experimental: {
+    cpus: Number(
+      process.env.NEXT_BUILD_CPUS ||
+        Math.max(1, Math.min(4, require('os').cpus().length - 1)),
+    ),
+  },
+
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
 

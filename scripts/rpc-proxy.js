@@ -23,6 +23,10 @@
 //   --allow-send| RPC_ALLOW_SEND |             forward sendTransaction (blocked by
 //                                              default: the mainnet demo is read-only)
 //   --quiet     |                |             log only misses/errors
+//   --env-file  |                |             read KEY=VALUE fallback env from a file (e.g. .env.local)
+//   --upstream-env NAME                       take the upstream URL from env var NAME,
+//                                              e.g. --env-file .env.local --upstream-env BACKEND_MAINNET_RPC
+//                                              (the URL/key is never logged or saved)
 //
 // Snapshot format (JSON):
 //   { version: 1, entries: { <key>: { method, params, response, recordedAt } },
@@ -171,11 +175,16 @@ function loadSnapshot(file, { mustExist }) {
   return snap
 }
 
-function saveSnapshot(file, snap) {
+function saveSnapshot(file, snap, secrets = []) {
   fs.mkdirSync(path.dirname(file), { recursive: true })
   snap.updatedAt = new Date().toISOString()
+  const json = JSON.stringify(snap)
+  // Defense in depth: never persist the upstream API key.
+  if (secrets.some((x) => json.includes(x))) {
+    throw new Error('refusing to save: snapshot would contain the upstream key')
+  }
   const tmp = file + '.tmp'
-  fs.writeFileSync(tmp, JSON.stringify(snap))
+  fs.writeFileSync(tmp, json)
   fs.renameSync(tmp, file)
 }
 
@@ -304,6 +313,20 @@ function parseArgs(argv, env) {
     return eq ? eq.slice(name.length + 1) : undefined
   }
   const has = (name) => argv.includes(name)
+  // --env-file: read KEY=VALUE lines (e.g. .env.local) as a fallback env,
+  // without exporting them. --upstream-env NAME: take the upstream URL from
+  // that variable (keeps provider keys out of command lines and logs).
+  const envFile = get('--env-file')
+  if (envFile) {
+    if (fs.existsSync(envFile)) env = { ...readEnvFile(envFile), ...env }
+    else console.warn(`rpc-proxy: ${envFile} not found, ignoring --env-file`)
+  }
+  const upstreamEnv = get('--upstream-env')
+  if (upstreamEnv && !env[upstreamEnv]) {
+    console.warn(
+      `rpc-proxy: ${upstreamEnv} is not set; falling back to UPSTREAM or the public RPC`,
+    )
+  }
   const port = Number(get('--port') || env.PORT || 8898)
   const opts = {
     mode: get('--mode') || env.RPC_PROXY_MODE || 'live',
@@ -316,6 +339,7 @@ function parseArgs(argv, env) {
       : Number(get('--ws-port') || env.WS_PORT || port + 1),
     upstream:
       get('--upstream') ||
+      (upstreamEnv && env[upstreamEnv]) ||
       env.UPSTREAM ||
       'https://api.mainnet-beta.solana.com',
     allowSend: has('--allow-send') || env.RPC_ALLOW_SEND === 'true',
@@ -324,7 +348,44 @@ function parseArgs(argv, env) {
   if (!['live', 'record', 'replay'].includes(opts.mode)) {
     throw new Error(`unknown --mode ${opts.mode} (live | record | replay)`)
   }
+  if (opts.mode !== 'replay') {
+    const u = new URL(opts.upstream)
+    const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname)
+    if (local && Number(u.port) === opts.port) {
+      throw new Error('upstream points at this proxy itself (loop)')
+    }
+  }
   return opts
+}
+
+/** Minimal .env parser: KEY=VALUE, # comments, optional quotes. */
+function readEnvFile(file) {
+  const out = {}
+  for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+    const m = /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/.exec(
+      line,
+    )
+    if (!m) continue
+    let v = m[2]
+    if (/^(['"]).*\1$/.test(v)) v = v.slice(1, -1)
+    out[m[1]] = v
+  }
+  return out
+}
+
+/** Query-string values of the upstream URL (API keys) that must never be persisted. */
+function upstreamSecrets(upstream) {
+  try {
+    const u = new URL(upstream)
+    return [
+      ...u.searchParams.values(),
+      ...u.pathname.split('/'),
+      u.username,
+      u.password,
+    ].filter((v) => v && v.length >= 16)
+  } catch {
+    return []
+  }
 }
 
 // ----------------------------------------------------------------- server ---
@@ -338,6 +399,7 @@ const CORS = {
 
 function createProxy(opts) {
   const { mode } = opts
+  const secrets = opts.upstream ? upstreamSecrets(opts.upstream) : []
   const snap =
     mode === 'live'
       ? null
@@ -361,7 +423,7 @@ function createProxy(opts) {
     saveTimer = setTimeout(() => {
       saveTimer = null
       try {
-        saveSnapshot(opts.snapshot, snap)
+        saveSnapshot(opts.snapshot, snap, secrets)
       } catch (e) {
         console.error('snapshot save failed:', e.message)
       }
@@ -371,7 +433,7 @@ function createProxy(opts) {
     if (mode !== 'record') return
     if (saveTimer) clearTimeout(saveTimer)
     saveTimer = null
-    saveSnapshot(opts.snapshot, snap)
+    saveSnapshot(opts.snapshot, snap, secrets)
   }
 
   function blockedSend(r) {
@@ -657,6 +719,8 @@ module.exports = {
   loadSnapshot,
   saveSnapshot,
   parseArgs,
+  readEnvFile,
+  upstreamSecrets,
   createProxy,
   VOLATILE_METHODS,
 }

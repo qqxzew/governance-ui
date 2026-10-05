@@ -15,6 +15,8 @@ const {
   emptySnapshot,
   createProxy,
   parseArgs,
+  saveSnapshot,
+  upstreamSecrets,
 } = require('../rpc-proxy')
 
 const PK = '899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo'
@@ -345,5 +347,48 @@ describe('proxy end-to-end (fake upstream)', () => {
     expect(r2.json[2].error.code).toBe(-32001)
     expect(rep.stats.misses).toBe(1)
     rep.server.close()
+  })
+})
+
+describe('upstream secrets', () => {
+  const KEY = '0123456789abcdef-0123-4567-89ab-cdef01234567'
+  test('--env-file + --upstream-env picks the URL without exporting it', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rpcenv-'))
+    const file = path.join(tmp, '.env.local')
+    fs.writeFileSync(
+      file,
+      `# comment\nBACKEND_MAINNET_RPC="https://rpc.example.com/?api-key=${KEY}"\n`,
+    )
+    const o = parseArgs(
+      ['--env-file', file, '--upstream-env', 'BACKEND_MAINNET_RPC'],
+      {},
+    )
+    expect(o.upstream).toBe(`https://rpc.example.com/?api-key=${KEY}`)
+    expect(process.env.BACKEND_MAINNET_RPC).toBeUndefined()
+    expect(parseArgs(['--upstream-env', 'NOPE_NOT_SET'], {}).upstream).toBe(
+      'https://api.mainnet-beta.solana.com',
+    )
+    fs.rmSync(tmp, { recursive: true, force: true })
+  })
+
+  test('snapshot containing the upstream key is never written', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rpcsec-'))
+    const file = path.join(tmp, 'rpc.json')
+    const secrets = upstreamSecrets(`https://rpc.example.com/?api-key=${KEY}`)
+    expect(secrets).toEqual([KEY])
+    const snap = emptySnapshot()
+    recordEntry(snap, { method: 'getSlot' }, { result: 1 })
+    saveSnapshot(file, snap, secrets)
+    expect(fs.existsSync(file)).toBe(true)
+    recordEntry(snap, { method: 'echo', params: [KEY] }, { result: KEY })
+    expect(() => saveSnapshot(file, snap, secrets)).toThrow(/upstream key/)
+    expect(fs.readFileSync(file, 'utf8')).not.toContain(KEY)
+    fs.rmSync(tmp, { recursive: true, force: true })
+  })
+
+  test('upstream pointing at the proxy itself is rejected', () => {
+    expect(() =>
+      parseArgs(['--port', '8898', '--upstream', 'http://localhost:8898'], {}),
+    ).toThrow(/loop/)
   })
 })
