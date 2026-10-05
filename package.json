@@ -1,7 +1,7 @@
 {
   "name": "@solana/governance-ui",
   "author": "Solana Maintainers <maintainers@solana.foundation>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
