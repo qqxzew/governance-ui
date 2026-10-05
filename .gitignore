@@ -47,3 +47,8 @@ yarn-error.log*
 .vscode/settings.json
 .claude
 .claude.local
+# extra Next.js output dirs (NEXT_DIST_DIR)
+/.next-*/
+
+# rpc-proxy temp files
+demo/snapshot/*.tmp
