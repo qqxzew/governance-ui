@@ -174,12 +174,18 @@ const getVotingPowersForWallets = async ({
       const voter = voters[i]
       const voterPk = voterPks[i]
       if (voter) {
+        // VotingMintConfig::grants_vote_weight (voting_mint_config.rs): baseline > 0 || max_extra_lockup > 0.
+        // Checking only the baseline factor skipped every voter of registrars with baseline 0 (e.g. Marinade,
+        // where only locked tokens count), so their voting power was reported as missing.
         const hasDepositsWithCommunityMint = voter.deposits.find(
           (x) =>
             x.isUsed &&
-            mintCfgs[x.votingMintConfigIdx].baselineVoteWeightScaledFactor.gtn(
+            (mintCfgs[x.votingMintConfigIdx].baselineVoteWeightScaledFactor.gtn(
               0,
-            ),
+            ) ||
+              mintCfgs[
+                x.votingMintConfigIdx
+              ].maxExtraLockupVoteWeightScaledFactor.gtn(0)),
         )
         if (hasDepositsWithCommunityMint) {
           const simulationWallet = new PublicKey(SIMULATION_WALLET)
