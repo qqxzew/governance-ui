@@ -43,7 +43,11 @@ import {
   vestingPeriods,
 } from 'VoteStakeRegistry/tools/types'
 import BigNumber from 'bignumber.js'
-import { calcMintMultiplier } from 'VoteStakeRegistry/tools/deposits'
+import { calcMintMultiplier, getPeriod } from 'VoteStakeRegistry/tools/deposits'
+import {
+  LockupKind as VsrLockupKind,
+  previewLockVotingPower,
+} from '@tools/vsr/votingPower'
 import ButtonGroup from '@components/ButtonGroup'
 import InlineNotification from '@components/InlineNotification'
 import Tooltip from '@components/Tooltip'
@@ -222,6 +226,10 @@ const LockTokensModal = ({
       )
     : 0
 
+  // No unlocked VSR deposit yet: lock straight from the wallet (voteRegistryLockDeposit creates the
+  // voter + deposit entry and deposits from the wallet in one transaction), so "Lock" works without a
+  // prior plain "Deposit" step.
+  const lockFromWalletOnly = !depositRecord && !!realmTokenAccount
   const maxAmountToLock =
     depositRecord && mint && realmTokenAccount
       ? wantToLockMoreThenDeposited
@@ -232,6 +240,8 @@ const LockTokensModal = ({
             ),
           )
         : getMintDecimalAmount(mint, depositRecord?.amountDepositedNative)
+      : lockFromWalletOnly && mint
+      ? getMintDecimalAmount(mint, new BN(realmTokenAccount!.account.amount))
       : 0
 
   const maxAmount = depositToUnlock ? maxAmountToUnlock : maxAmountToLock
@@ -245,6 +255,8 @@ const LockTokensModal = ({
             ),
           )
         : fmtMintAmount(mint, depositRecord?.amountDepositedNative)
+      : lockFromWalletOnly && mint
+      ? fmtMintAmount(mint, new BN(realmTokenAccount!.account.amount))
       : 0
   const maxAmountToUnlockFmt = depositToUnlock
     ? fmtMintAmount(
@@ -267,6 +279,40 @@ const LockTokensModal = ({
   )
   const currentPercentOfMaxMultiplier =
     (100 * currentMultiplier) / maxMultiplier
+
+  // With baseline_vote_weight_scaled_factor == 0 the "multiplier" (relative to baseline) is meaningless
+  // (calcMintMultiplier returns 0). Show the exact voting power right after locking instead,
+  // computed with the verified port of the VSR math (tools/vsr/votingPower.ts).
+  const communityMintCfg =
+    realm && voteStakeRegistryRegistrar
+      ? voteStakeRegistryRegistrar.votingMints.find((x) =>
+          x.mint.equals(realm.account.communityMint),
+        )
+      : undefined
+  const zeroBaseline =
+    !!communityMintCfg && communityMintCfg.baselineVoteWeightScaledFactor.isZero()
+  const expectedVotingPowerFmt = useMemo(() => {
+    if (!zeroBaseline || !communityMintCfg || !mint || !amount || depositToUnlock)
+      return null
+    const kind = {
+      cliff: VsrLockupKind.Cliff,
+      constant: VsrLockupKind.Constant,
+      monthly: VsrLockupKind.Monthly,
+      daily: VsrLockupKind.Daily,
+      none: VsrLockupKind.None,
+    }[lockupType.value]
+    try {
+      const vp = previewLockVotingPower(
+        communityMintCfg,
+        getMintNaturalAmountFromDecimalAsBN(amount, mint.decimals),
+        kind,
+        getPeriod(lockupPeriodDays, lockupType.value),
+      )
+      return fmtMintAmount(mint, vp)
+    } catch {
+      return null
+    }
+  }, [zeroBaseline, communityMintCfg, mint, amount, depositToUnlock, lockupType.value, lockupPeriodDays])
 
   const handleNextStep = () => {
     setCurrentStep(currentStep + 1)
@@ -324,7 +370,8 @@ const LockTokensModal = ({
       totalTransferAmount: totalAmountToLock,
       lockUpPeriodInDays: lockupPeriodDays,
       lockupKind: lockupType.value,
-      sourceDepositIdx: depositRecord!.index,
+      // only used when amountFromDeposit > 0, which requires an existing depositRecord
+      sourceDepositIdx: depositRecord?.index ?? 0,
       sourceTokenAccount: realmTokenAccount!.publicKey,
       allowClawback: allowClawback,
       tokenOwnerRecordPk,
@@ -452,7 +499,7 @@ const LockTokensModal = ({
                   />
                 </div>
               )}
-              {hasMoreTokensInWallet && !depositToUnlock && (
+              {hasMoreTokensInWallet && !depositToUnlock && depositRecord && (
                 <DoYouWantToDepositMoreComponent />
               )}
               <div className="mb-4">
@@ -559,6 +606,17 @@ const LockTokensModal = ({
                   </div>
                 </div>
               )}
+              {zeroBaseline && !depositToUnlock ? (
+                <div className={`${labelClasses} flex items-center`}>
+                  {lockupType.value === CONSTANT
+                    ? 'Voting power (stays constant until you unlock)'
+                    : 'Voting power right after locking (then decays)'}
+                  <span className="font-bold ml-auto text-fgd-1">
+                    {expectedVotingPowerFmt ?? '–'}
+                  </span>
+                </div>
+              ) : (
+              <>
               <div className={`${labelClasses} flex items-center`}>
                 {lockupType.value === CONSTANT
                   ? 'Vote Weight Multiplier'
@@ -584,6 +642,8 @@ const LockTokensModal = ({
                   className="bg-primary-light h-2 rounded-lg"
                 ></div>
               </div>
+              </>
+              )}
               {/* {!depositToUnlock && (
                 <div className="flex text-sm text-fgd-2">
                   <div className="pr-5">
@@ -620,8 +680,19 @@ const LockTokensModal = ({
                 {getFormattedStringFromDays(lockupPeriodDays, true)}
               </h2>
             )}
+            {!depositToUnlock && expectedVotingPowerFmt && (
+              <p className="mb-2">
+                Expected voting power right after locking:{' '}
+                <span className="font-bold">{expectedVotingPowerFmt}</span>
+              </p>
+            )}
             {!depositToUnlock && (
               <p className="mb-0">Locking tokens can’t be undone.</p>
+            )}
+            {!depositToUnlock && (
+              <p className="mt-2 mb-0 text-xs text-fgd-3">
+                The transaction is simulated before your wallet asks you to sign.
+              </p>
             )}
           </div>
         )

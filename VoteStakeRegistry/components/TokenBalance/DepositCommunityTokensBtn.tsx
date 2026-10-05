@@ -17,6 +17,7 @@ import queryClient from '@hooks/queries/queryClient'
 import { tokenAccountQueryKeys } from '@hooks/queries/tokenAccount'
 import { useVsrClient } from '../../../VoterWeightPlugins/useVsrClient'
 import { CUSTOM_BIO_VSR_PLUGIN_PK } from '@constants/plugins'
+import { useUnlockedDepositsGiveNoVotingPower } from '@components/VotingPowerCard/useVsrVoterState'
 
 const DepositCommunityTokensBtn = ({ className = '', inAccountDetails }) => {
   const { getOwnedDeposits } = useDepositStore()
@@ -31,6 +32,8 @@ const DepositCommunityTokensBtn = ({ className = '', inAccountDetails }) => {
   const currentTokenOwnerRecord =
     useUserCommunityTokenOwnerRecord().data?.result
   const { vsrClient } = useVsrClient()
+  // e.g. Marinade: baseline factor 0 => a plain (unlocked) deposit gives 0 voting power
+  const depositGivesNoVotingPower = useUnlockedDepositsGiveNoVotingPower()
 
   const depositAllTokens = async function () {
     if (!realm) {
@@ -101,6 +104,8 @@ const DepositCommunityTokensBtn = ({ className = '', inAccountDetails }) => {
     ? 'Connect your wallet to deposit'
     : !hasTokensInWallet
     ? "You don't have any governance tokens in your wallet to deposit."
+    : depositGivesNoVotingPower
+    ? 'Deposited but unlocked tokens give 0 voting power in this DAO. Use "Lock tokens" to get voting power.'
     : ''
 
   return hasTokensInWallet || inAccountDetails ? (
@@ -110,7 +115,13 @@ const DepositCommunityTokensBtn = ({ className = '', inAccountDetails }) => {
       disabled={!connected || !hasTokensInWallet || isLoading}
       onClick={depositAllTokens}
     >
-      {isLoading ? <Loading></Loading> : 'Deposit'}
+      {isLoading ? (
+        <Loading></Loading>
+      ) : depositGivesNoVotingPower ? (
+        'Deposit without locking (0 votes)'
+      ) : (
+        'Deposit'
+      )}
     </SecondaryButton>
   ) : null
 }

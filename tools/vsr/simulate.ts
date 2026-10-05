@@ -92,13 +92,19 @@ export async function simulateVsrTransaction({
   const message = new TransactionMessage({
     payerKey: payer,
     recentBlockhash: blockhash,
-    instructions: [...instructions, logVoterInfoInstruction(vsrProgramId, registrar, voter)],
+    instructions: [
+      ...instructions,
+      logVoterInfoInstruction(vsrProgramId, registrar, voter),
+    ],
   }).compileToV0Message()
-  const sim = await connection.simulateTransaction(new VersionedTransaction(message), {
-    sigVerify: false,
-    replaceRecentBlockhash: true,
-    commitment: 'confirmed',
-  })
+  const sim = await connection.simulateTransaction(
+    new VersionedTransaction(message),
+    {
+      sigVerify: false,
+      replaceRecentBlockhash: true,
+      commitment: 'confirmed',
+    },
+  )
   const logs = sim.value.logs ?? []
   const info = parseVoterInfoFromLogs(logs)
   const err = sim.value.err

@@ -18,6 +18,11 @@ import {
 import { BN } from '@coral-xyz/anchor'
 import { useRealmConfigQuery } from '@hooks/queries/realmConfig'
 import { CUSTOM_BIO_VSR_PLUGIN_PK } from '@constants/plugins'
+import VotingPowerCard from '@components/VotingPowerCard'
+import {
+  useUnlockedDepositsGiveNoVotingPower,
+  useVsrProgramId,
+} from '@components/VotingPowerCard/useVsrVoterState'
 
 interface Props {
   className?: string
@@ -54,6 +59,8 @@ export default function LockedCommunityVotingPower(props: Props) {
   const isLastVoterWeightPlugin = isVSRLastVoterWeightPlugin(plugins)
 
   const isLoading = useDepositStore((s) => s.state.isLoading)
+  const unlockedGivesNothing = useUnlockedDepositsGiveNoVotingPower()
+  const vsrCardActive = !!useVsrProgramId()
 
   const depositMint = realm?.account.communityMint
   const depositAmount = realmTokenAccount
@@ -84,22 +91,44 @@ export default function LockedCommunityVotingPower(props: Props) {
     )
   }
 
+  const hasDelegators = (relevantDelegators?.length ?? 0) > 0
+  const legacyVotingPower =
+    (votingPower === undefined || votingPower.isZero()) && !hasDelegators ? (
+      <div className={'text-xs text-white/50'}>
+        You do not have any voting power in this dao.
+      </div>
+    ) : (
+      <VSRCommunityVotingPower
+        votingPower={votingPower}
+        votingPowerLoading={!votingPowerReady}
+        isLastPlugin={isLastVoterWeightPlugin}
+      />
+    )
+
   return (
     <div className={props.className}>
-      {(votingPower === undefined || votingPower.isZero()) &&
-      (relevantDelegators?.length ?? 0) < 1 ? (
-        <div className={'text-xs text-white/50'}>
-          You do not have any voting power in this dao.
-        </div>
-      ) : (
+      {/* VSR voting power card (locked amount, lockup, decay rule, unlocked-deposit warning, Lock button).
+          Falls back to the legacy view for non-standard VSR layouts. */}
+      <VotingPowerCard
+        walletTokenAmount={
+          unlockedGivesNothing && realmTokenAccount
+            ? new BN(realmTokenAccount.account.amount.toString())
+            : undefined
+        }
+        fallback={legacyVotingPower}
+      />
+      {hasDelegators && vsrCardActive && (
         <VSRCommunityVotingPower
+          className="mt-3"
           votingPower={votingPower}
           votingPowerLoading={!votingPowerReady}
           isLastPlugin={isLastVoterWeightPlugin}
         />
       )}
 
-      {depositAmount.isGreaterThan(0) && (
+      {/* When unlocked deposits give 0 voting power, the card's "Lock tokens" button is the path;
+          a plain deposit prompt here would be misleading. */}
+      {depositAmount.isGreaterThan(0) && !unlockedGivesNothing && (
         <>
           <div className="mt-3 mb-3 text-xs text-white/50">
             You have{' '}

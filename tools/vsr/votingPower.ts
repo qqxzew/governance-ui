@@ -42,11 +42,13 @@ const I64_MAX = new BN(1).shln(63).subn(1)
 const I64_MIN = new BN(1).shln(63).neg()
 
 function assertU64(v: BN, what: string): BN {
-  if (v.isNeg() || v.gt(U64_MAX)) throw new VsrMathError(`${what}: u64 overflow (${v.toString()})`)
+  if (v.isNeg() || v.gt(U64_MAX))
+    throw new VsrMathError(`${what}: u64 overflow (${v.toString()})`)
   return v
 }
 function assertI64(v: BN, what: string): BN {
-  if (v.lt(I64_MIN) || v.gt(I64_MAX)) throw new VsrMathError(`${what}: i64 overflow (${v.toString()})`)
+  if (v.lt(I64_MIN) || v.gt(I64_MAX))
+    throw new VsrMathError(`${what}: i64 overflow (${v.toString()})`)
   return v
 }
 /** u64::checked_sub(..).unwrap() */
@@ -132,11 +134,17 @@ export interface VsrVoter {
 // ---------------------------------------------------------------------------------------------
 
 /** sha256("account:Registrar")[0..8] (anchor account discriminator) */
-export const REGISTRAR_DISCRIMINATOR = Buffer.from([193, 202, 205, 51, 78, 168, 150, 128])
+export const REGISTRAR_DISCRIMINATOR = Buffer.from([
+  193, 202, 205, 51, 78, 168, 150, 128,
+])
 /** sha256("account:Voter")[0..8] */
-export const VOTER_DISCRIMINATOR = Buffer.from([241, 93, 35, 191, 254, 147, 17, 202])
+export const VOTER_DISCRIMINATOR = Buffer.from([
+  241, 93, 35, 191, 254, 147, 17, 202,
+])
 /** sha256("account:VoterWeightRecord")[0..8] (spl_governance_addin_api VoterWeightRecord) */
-export const VOTER_WEIGHT_RECORD_DISCRIMINATOR = Buffer.from([46, 249, 155, 75, 153, 248, 116, 9])
+export const VOTER_WEIGHT_RECORD_DISCRIMINATOR = Buffer.from([
+  46, 249, 155, 75, 153, 248, 116, 9,
+])
 
 export const REGISTRAR_SIZE = 8 + 5 * 32 + 4 * 152 + 8 + 1 + 95 // 880
 export const VOTER_SIZE = 8 + 2 * 32 + 32 * 80 + 2 + 94 // 2728
@@ -144,12 +152,17 @@ const VOTING_MINT_CONFIG_SIZE = 152
 const DEPOSIT_ENTRY_SIZE = 80
 
 const u64At = (b: Buffer, o: number) => new BN(b.subarray(o, o + 8), 'le')
-const i64At = (b: Buffer, o: number) => new BN(b.subarray(o, o + 8), 'le').fromTwos(64)
+const i64At = (b: Buffer, o: number) =>
+  new BN(b.subarray(o, o + 8), 'le').fromTwos(64)
 const pkAt = (b: Buffer, o: number) => new PublicKey(b.subarray(o, o + 32))
 
 function checkDisc(data: Buffer, disc: Buffer, size: number, name: string) {
-  if (data.length < size) throw new VsrMathError(`${name}: account too small (${data.length} < ${size})`)
-  if (!data.subarray(0, 8).equals(disc)) throw new VsrMathError(`${name}: wrong account discriminator`)
+  if (data.length < size)
+    throw new VsrMathError(
+      `${name}: account too small (${data.length} < ${size})`,
+    )
+  if (!data.subarray(0, 8).equals(disc))
+    throw new VsrMathError(`${name}: wrong account discriminator`)
 }
 
 /** VotingMintConfig: mint[32] grant_authority[32] baseline u64 max_extra u64 saturation u64 digit_shift i8 reserved1[7] reserved2[u64;7] */
@@ -171,7 +184,10 @@ function decodeVotingMintConfig(b: Buffer, o: number): VsrVotingMintConfig {
 export function decodeRegistrar(data: Buffer): VsrRegistrar {
   checkDisc(data, REGISTRAR_DISCRIMINATOR, REGISTRAR_SIZE, 'Registrar')
   const votingMints: VsrVotingMintConfig[] = []
-  for (let i = 0; i < 4; i++) votingMints.push(decodeVotingMintConfig(data, 168 + i * VOTING_MINT_CONFIG_SIZE))
+  for (let i = 0; i < 4; i++)
+    votingMints.push(
+      decodeVotingMintConfig(data, 168 + i * VOTING_MINT_CONFIG_SIZE),
+    )
   const after = 168 + 4 * VOTING_MINT_CONFIG_SIZE // 776
   return {
     governanceProgramId: pkAt(data, 8),
@@ -190,9 +206,14 @@ export function decodeRegistrar(data: Buffer): VsrRegistrar {
  */
 function decodeDepositEntry(b: Buffer, o: number): VsrDepositEntry {
   const kind = b[o + 16]
-  if (kind > LockupKind.Constant) throw new VsrMathError(`DepositEntry: unknown LockupKind ${kind}`)
+  if (kind > LockupKind.Constant)
+    throw new VsrMathError(`DepositEntry: unknown LockupKind ${kind}`)
   return {
-    lockup: { startTs: i64At(b, o), endTs: i64At(b, o + 8), kind: kind as LockupKind },
+    lockup: {
+      startTs: i64At(b, o),
+      endTs: i64At(b, o + 8),
+      kind: kind as LockupKind,
+    },
     amountDepositedNative: u64At(b, o + 32),
     amountInitiallyLockedNative: u64At(b, o + 40),
     isUsed: b[o + 48] !== 0,
@@ -205,7 +226,8 @@ function decodeDepositEntry(b: Buffer, o: number): VsrDepositEntry {
 export function decodeVoter(data: Buffer): VsrVoter {
   checkDisc(data, VOTER_DISCRIMINATOR, VOTER_SIZE, 'Voter')
   const deposits: VsrDepositEntry[] = []
-  for (let i = 0; i < 32; i++) deposits.push(decodeDepositEntry(data, 72 + i * DEPOSIT_ENTRY_SIZE))
+  for (let i = 0; i < 32; i++)
+    deposits.push(decodeDepositEntry(data, 72 + i * DEPOSIT_ENTRY_SIZE))
   const after = 72 + 32 * DEPOSIT_ENTRY_SIZE // 2632
   return {
     voterAuthority: pkAt(data, 8),
@@ -254,7 +276,8 @@ export function periodSecs(kind: LockupKind): BN {
 }
 
 /** lockup.rs `LockupKind::is_vesting` */
-export const isVesting = (kind: LockupKind) => kind === LockupKind.Daily || kind === LockupKind.Monthly
+export const isVesting = (kind: LockupKind) =>
+  kind === LockupKind.Daily || kind === LockupKind.Monthly
 
 /** lockup.rs `Lockup::seconds_left` (u64). Constant lockups never count down: curr_ts is replaced by start_ts. */
 export function secondsLeft(lockup: VsrLockup, currTs: BN): BN {
@@ -264,14 +287,16 @@ export function secondsLeft(lockup: VsrLockup, currTs: BN): BN {
 }
 
 /** lockup.rs `Lockup::expired` */
-export const lockupExpired = (lockup: VsrLockup, currTs: BN) => secondsLeft(lockup, currTs).isZero()
+export const lockupExpired = (lockup: VsrLockup, currTs: BN) =>
+  secondsLeft(lockup, currTs).isZero()
 
 /** lockup.rs `Lockup::periods_total` (errors with InvalidLockupPeriod if not a whole number of periods) */
 export function periodsTotal(lockup: VsrLockup): BN {
   const ps = periodSecs(lockup.kind)
   if (ps.isZero()) return ZERO
   const lockupSecs = secondsLeft(lockup, lockup.startTs)
-  if (!lockupSecs.mod(ps).isZero()) throw new VsrMathError('InvalidLockupPeriod')
+  if (!lockupSecs.mod(ps).isZero())
+    throw new VsrMathError('InvalidLockupPeriod')
   return lockupSecs.div(ps)
 }
 
@@ -281,7 +306,10 @@ export function periodsLeft(lockup: VsrLockup, currTs: BN): BN {
   if (ps.isZero()) return ZERO
   if (currTs.lt(lockup.startTs)) return periodsTotal(lockup)
   // seconds_left(curr_ts).checked_add(period_secs.saturating_sub(1)).checked_div(period_secs)
-  return assertU64(secondsLeft(lockup, currTs).add(satSub(ps, ONE)), 'periods_left').div(ps)
+  return assertU64(
+    secondsLeft(lockup, currTs).add(satSub(ps, ONE)),
+    'periods_left',
+  ).div(ps)
 }
 
 /** lockup.rs `Lockup::period_current` */
@@ -294,7 +322,10 @@ export function periodCurrent(lockup: VsrLockup, currTs: BN): BN {
 // ---------------------------------------------------------------------------------------------
 
 /** voting_mint_config.rs `VotingMintConfig::digit_shift_native` (u128 intermediate, must fit u64) */
-export function digitShiftNative(cfg: VsrVotingMintConfig, amountNative: BN): BN {
+export function digitShiftNative(
+  cfg: VsrVotingMintConfig,
+  amountNative: BN,
+): BN {
   const pow = new BN(10).pow(new BN(Math.abs(cfg.digitShift)))
   const val = cfg.digitShift < 0 ? amountNative.div(pow) : amountNative.mul(pow)
   return assertU64(val, 'VoterWeightOverflow (digit_shift)')
@@ -302,37 +333,68 @@ export function digitShiftNative(cfg: VsrVotingMintConfig, amountNative: BN): BN
 
 /** voting_mint_config.rs `VotingMintConfig::apply_factor`: base * factor / 1e9 in u128, result must fit u64 */
 export function applyFactor(base: BN, factor: BN): BN {
-  return assertU64(base.mul(factor).div(SCALED_FACTOR_BASE), 'VoterWeightOverflow (apply_factor)')
+  return assertU64(
+    base.mul(factor).div(SCALED_FACTOR_BASE),
+    'VoterWeightOverflow (apply_factor)',
+  )
 }
 
 /** voting_mint_config.rs `VotingMintConfig::baseline_vote_weight` */
-export const baselineVoteWeight = (cfg: VsrVotingMintConfig, amountNative: BN) =>
-  applyFactor(digitShiftNative(cfg, amountNative), cfg.baselineVoteWeightScaledFactor)
+export const baselineVoteWeight = (
+  cfg: VsrVotingMintConfig,
+  amountNative: BN,
+) =>
+  applyFactor(
+    digitShiftNative(cfg, amountNative),
+    cfg.baselineVoteWeightScaledFactor,
+  )
 
 /** voting_mint_config.rs `VotingMintConfig::max_extra_lockup_vote_weight` */
-export const maxExtraLockupVoteWeight = (cfg: VsrVotingMintConfig, amountNative: BN) =>
-  applyFactor(digitShiftNative(cfg, amountNative), cfg.maxExtraLockupVoteWeightScaledFactor)
+export const maxExtraLockupVoteWeight = (
+  cfg: VsrVotingMintConfig,
+  amountNative: BN,
+) =>
+  applyFactor(
+    digitShiftNative(cfg, amountNative),
+    cfg.maxExtraLockupVoteWeightScaledFactor,
+  )
 
 /** voting_mint_config.rs `VotingMintConfig::in_use` */
-export const mintConfigInUse = (cfg: VsrVotingMintConfig) => !cfg.mint.equals(PublicKey.default)
+export const mintConfigInUse = (cfg: VsrVotingMintConfig) =>
+  !cfg.mint.equals(PublicKey.default)
 
 /** voting_mint_config.rs `VotingMintConfig::grants_vote_weight` */
 export const grantsVoteWeight = (cfg: VsrVotingMintConfig) =>
-  cfg.baselineVoteWeightScaledFactor.gtn(0) || cfg.maxExtraLockupVoteWeightScaledFactor.gtn(0)
+  cfg.baselineVoteWeightScaledFactor.gtn(0) ||
+  cfg.maxExtraLockupVoteWeightScaledFactor.gtn(0)
 
 // ---------------------------------------------------------------------------------------------
 // state/deposit_entry.rs
 // ---------------------------------------------------------------------------------------------
 
 /** deposit_entry.rs `DepositEntry::voting_power_cliff` (used for Cliff AND Constant) */
-function votingPowerCliff(d: VsrDepositEntry, currTs: BN, maxLocked: BN, saturationSecs: BN): BN {
+function votingPowerCliff(
+  d: VsrDepositEntry,
+  currTs: BN,
+  maxLocked: BN,
+  saturationSecs: BN,
+): BN {
   const remaining = minBN(secondsLeft(d.lockup, currTs), saturationSecs)
-  if (saturationSecs.isZero()) throw new VsrMathError('division by zero (lockup_saturation_secs)')
-  return assertU64(maxLocked.mul(remaining).div(saturationSecs), 'voting_power_cliff')
+  if (saturationSecs.isZero())
+    throw new VsrMathError('division by zero (lockup_saturation_secs)')
+  return assertU64(
+    maxLocked.mul(remaining).div(saturationSecs),
+    'voting_power_cliff',
+  )
 }
 
 /** deposit_entry.rs `DepositEntry::voting_power_linear_vesting` (Daily / Monthly) */
-function votingPowerLinearVesting(d: VsrDepositEntry, currTs: BN, maxLocked: BN, saturationSecs: BN): BN {
+function votingPowerLinearVesting(
+  d: VsrDepositEntry,
+  currTs: BN,
+  maxLocked: BN,
+  saturationSecs: BN,
+): BN {
   const pLeft = periodsLeft(d.lockup, currTs)
   const pTotal = periodsTotal(d.lockup)
   const ps = periodSecs(d.lockup.kind)
@@ -346,39 +408,80 @@ function votingPowerLinearVesting(d: VsrDepositEntry, currTs: BN, maxLocked: BN,
   if (secsToClosestCliff.gte(saturationSecs)) return maxLocked
 
   const denominator = assertU64(pTotal.mul(saturationSecs), 'denominator')
-  const lockupSaturationPeriods = assertU64(satSub(saturationSecs, secsToClosestCliff).add(ps), 'sat periods').div(ps)
+  const lockupSaturationPeriods = assertU64(
+    satSub(saturationSecs, secsToClosestCliff).add(ps),
+    'sat periods',
+  ).div(ps)
   const q = minBN(lockupSaturationPeriods, pLeft)
   const r = satSub(pLeft, q)
   const sumFullPeriods = assertU64(q.mul(satSub(q, ONE)), 'q*(q-1)').divn(2)
-  const lockupSecsFractional = assertU64(q.mul(secsToClosestCliff), 'lockup_secs_fractional')
+  const lockupSecsFractional = assertU64(
+    q.mul(secsToClosestCliff),
+    'lockup_secs_fractional',
+  )
   const lockupSecsFull = assertU64(sumFullPeriods.mul(ps), 'lockup_secs_full')
-  const lockupSecsSaturated = assertU64(r.mul(saturationSecs), 'lockup_secs_saturated')
-  const lockupSecs = lockupSecsFractional.add(lockupSecsFull).add(lockupSecsSaturated) // u128
-  if (denominator.isZero()) throw new VsrMathError('division by zero (denominator)')
-  return assertU64(maxLocked.mul(lockupSecs).div(denominator), 'voting_power_linear_vesting')
+  const lockupSecsSaturated = assertU64(
+    r.mul(saturationSecs),
+    'lockup_secs_saturated',
+  )
+  const lockupSecs = lockupSecsFractional
+    .add(lockupSecsFull)
+    .add(lockupSecsSaturated) // u128
+  if (denominator.isZero())
+    throw new VsrMathError('division by zero (denominator)')
+  return assertU64(
+    maxLocked.mul(lockupSecs).div(denominator),
+    'voting_power_linear_vesting',
+  )
 }
 
 /** deposit_entry.rs `DepositEntry::voting_power_locked`: vote power contribution from locked funds only */
-export function votingPowerLocked(d: VsrDepositEntry, currTs: BN, maxLockedVoteWeight: BN, lockupSaturationSecs: BN): BN {
-  if (lockupExpired(d.lockup, currTs) || maxLockedVoteWeight.isZero()) return ZERO
+export function votingPowerLocked(
+  d: VsrDepositEntry,
+  currTs: BN,
+  maxLockedVoteWeight: BN,
+  lockupSaturationSecs: BN,
+): BN {
+  if (lockupExpired(d.lockup, currTs) || maxLockedVoteWeight.isZero())
+    return ZERO
   switch (d.lockup.kind) {
     case LockupKind.None:
       return ZERO
     case LockupKind.Daily:
     case LockupKind.Monthly:
-      return votingPowerLinearVesting(d, currTs, maxLockedVoteWeight, lockupSaturationSecs)
+      return votingPowerLinearVesting(
+        d,
+        currTs,
+        maxLockedVoteWeight,
+        lockupSaturationSecs,
+      )
     case LockupKind.Cliff:
     case LockupKind.Constant:
-      return votingPowerCliff(d, currTs, maxLockedVoteWeight, lockupSaturationSecs)
+      return votingPowerCliff(
+        d,
+        currTs,
+        maxLockedVoteWeight,
+        lockupSaturationSecs,
+      )
   }
 }
 
 /** deposit_entry.rs `DepositEntry::voting_power` = baseline(amount_deposited) + locked(amount_initially_locked) */
-export function depositVotingPower(d: VsrDepositEntry, cfg: VsrVotingMintConfig, currTs: BN): BN {
+export function depositVotingPower(
+  d: VsrDepositEntry,
+  cfg: VsrVotingMintConfig,
+  currTs: BN,
+): BN {
   const baseline = baselineVoteWeight(cfg, d.amountDepositedNative)
   const maxLocked = maxExtraLockupVoteWeight(cfg, d.amountInitiallyLockedNative)
-  const locked = votingPowerLocked(d, currTs, maxLocked, cfg.lockupSaturationSecs)
-  if (locked.gt(maxLocked)) throw new VsrMathError('InternalErrorBadLockupVoteWeight')
+  const locked = votingPowerLocked(
+    d,
+    currTs,
+    maxLocked,
+    cfg.lockupSaturationSecs,
+  )
+  if (locked.gt(maxLocked))
+    throw new VsrMathError('InternalErrorBadLockupVoteWeight')
   return assertU64(baseline.add(locked), 'VoterWeightOverflow')
 }
 
@@ -395,7 +498,9 @@ export function vested(d: VsrDepositEntry, currTs: BN): BN {
       const total = periodsTotal(d.lockup)
       if (cur.isZero()) return ZERO
       if (cur.gte(total)) return d.amountInitiallyLockedNative
-      return assertU64(d.amountInitiallyLockedNative.mul(cur), 'vested').div(total)
+      return assertU64(d.amountInitiallyLockedNative.mul(cur), 'vested').div(
+        total,
+      )
     }
     case LockupKind.Cliff:
     case LockupKind.Constant:
@@ -416,31 +521,55 @@ export const amountUnlocked = (d: VsrDepositEntry, currTs: BN) =>
 // ---------------------------------------------------------------------------------------------
 
 /** registrar.rs `Registrar::clock_unix_timestamp` = Clock::unix_timestamp + time_offset */
-export const registrarTimestamp = (registrar: VsrRegistrar, clockUnixTimestamp: BN | number) =>
-  assertI64(new BN(clockUnixTimestamp).add(registrar.timeOffset), 'clock_unix_timestamp')
+export const registrarTimestamp = (
+  registrar: VsrRegistrar,
+  clockUnixTimestamp: BN | number,
+) =>
+  assertI64(
+    new BN(clockUnixTimestamp).add(registrar.timeOffset),
+    'clock_unix_timestamp',
+  )
 
 /**
  * voter.rs `Voter::weight`: the value update_voter_weight_record writes into VoterWeightRecord.voter_weight.
  * `clockUnixTimestamp` is the raw Clock sysvar unix_timestamp (the registrar time_offset is applied here).
  */
-export function voterWeight(voter: VsrVoter, registrar: VsrRegistrar, clockUnixTimestamp: BN | number): BN {
+export function voterWeight(
+  voter: VsrVoter,
+  registrar: VsrRegistrar,
+  clockUnixTimestamp: BN | number,
+): BN {
   const currTs = registrarTimestamp(registrar, clockUnixTimestamp)
   let sum = ZERO
   for (const d of voter.deposits) {
     if (!d.isUsed) continue
     const cfg = registrar.votingMints[d.votingMintConfigIdx]
     if (!cfg) throw new VsrMathError('voting_mint_config_idx out of bounds')
-    sum = assertU64(sum.add(depositVotingPower(d, cfg, currTs)), 'Voter::weight sum')
+    sum = assertU64(
+      sum.add(depositVotingPower(d, cfg, currTs)),
+      'Voter::weight sum',
+    )
   }
   return sum
 }
 
 /** voter.rs `Voter::weight_baseline` (weight ignoring all lockup effects) */
-export function voterWeightBaseline(voter: VsrVoter, registrar: VsrRegistrar): BN {
+export function voterWeightBaseline(
+  voter: VsrVoter,
+  registrar: VsrRegistrar,
+): BN {
   let sum = ZERO
   for (const d of voter.deposits) {
     if (!d.isUsed) continue
-    sum = assertU64(sum.add(baselineVoteWeight(registrar.votingMints[d.votingMintConfigIdx], d.amountDepositedNative)), 'baseline sum')
+    sum = assertU64(
+      sum.add(
+        baselineVoteWeight(
+          registrar.votingMints[d.votingMintConfigIdx],
+          d.amountDepositedNative,
+        ),
+      ),
+      'baseline sum',
+    )
   }
   return sum
 }
@@ -480,7 +609,11 @@ export interface VoterSummary {
   deposits: DepositSummary[]
 }
 
-export function summarizeVoter(voter: VsrVoter, registrar: VsrRegistrar, clockUnixTimestamp: BN | number): VoterSummary {
+export function summarizeVoter(
+  voter: VsrVoter,
+  registrar: VsrRegistrar,
+  clockUnixTimestamp: BN | number,
+): VoterSummary {
   const currTs = registrarTimestamp(registrar, clockUnixTimestamp)
   const deposits: DepositSummary[] = []
   let lockedNative = ZERO
@@ -500,13 +633,17 @@ export function summarizeVoter(voter: VsrVoter, registrar: VsrRegistrar, clockUn
       lockedNative: locked,
       unlockedNative: unlocked,
       secondsLeft: left,
-      endTs: d.lockup.kind !== LockupKind.Constant && left.gtn(0) ? currTs.add(left) : null,
+      endTs:
+        d.lockup.kind !== LockupKind.Constant && left.gtn(0)
+          ? currTs.add(left)
+          : null,
       votingPower: depositVotingPower(d, cfg, currTs),
       baselineVotingPower: baselineVoteWeight(cfg, d.amountDepositedNative),
     })
     lockedNative = lockedNative.add(locked)
     unlockedNative = unlockedNative.add(unlocked)
-    if (cfg.baselineVoteWeightScaledFactor.isZero()) unlockedWithoutVp = unlockedWithoutVp.add(unlocked)
+    if (cfg.baselineVoteWeightScaledFactor.isZero())
+      unlockedWithoutVp = unlockedWithoutVp.add(unlocked)
   })
   return {
     currTs,
@@ -523,8 +660,13 @@ export function summarizeVoter(voter: VsrVoter, registrar: VsrRegistrar, clockUn
  * True when the registrar gives deposited-but-unlocked tokens of `mint` no voting power at all
  * (baseline_vote_weight_scaled_factor == 0). Generic: derived from registrar config, not hardcoded.
  */
-export function unlockedDepositsHaveNoVotingPower(registrar: VsrRegistrar, mint: PublicKey): boolean {
-  const cfg = registrar.votingMints.find((c) => mintConfigInUse(c) && c.mint.equals(mint))
+export function unlockedDepositsHaveNoVotingPower(
+  registrar: VsrRegistrar,
+  mint: PublicKey,
+): boolean {
+  const cfg = registrar.votingMints.find(
+    (c) => mintConfigInUse(c) && c.mint.equals(mint),
+  )
   return !!cfg && cfg.baselineVoteWeightScaledFactor.isZero()
 }
 
@@ -539,7 +681,8 @@ export function previewLockVotingPower(
   kind: LockupKind,
   periods: number,
 ): BN {
-  if (!Number.isInteger(periods) || periods < 0) throw new VsrMathError('InvalidLockupPeriod')
+  if (!Number.isInteger(periods) || periods < 0)
+    throw new VsrMathError('InvalidLockupPeriod')
   const endTs = periodSecs(kind).muln(periods)
   const d: VsrDepositEntry = {
     lockup: { startTs: ZERO, endTs, kind },
@@ -556,9 +699,21 @@ export function previewLockVotingPower(
  * Voting power a fresh deposit of `amountNative` would have right now for a lockup of `lockupSecs`
  * (Cliff/Constant semantics; for vesting kinds build a VsrDepositEntry and call depositVotingPower).
  */
-export function previewCliffVotingPower(cfg: VsrVotingMintConfig, amountNative: BN, lockupSecs: BN, kind: LockupKind.Cliff | LockupKind.Constant | LockupKind.None = LockupKind.Cliff): BN {
+export function previewCliffVotingPower(
+  cfg: VsrVotingMintConfig,
+  amountNative: BN,
+  lockupSecs: BN,
+  kind:
+    | LockupKind.Cliff
+    | LockupKind.Constant
+    | LockupKind.None = LockupKind.Cliff,
+): BN {
   const d: VsrDepositEntry = {
-    lockup: { startTs: ZERO, endTs: kind === LockupKind.None ? ZERO : lockupSecs, kind },
+    lockup: {
+      startTs: ZERO,
+      endTs: kind === LockupKind.None ? ZERO : lockupSecs,
+      kind,
+    },
     amountDepositedNative: amountNative,
     amountInitiallyLockedNative: kind === LockupKind.None ? ZERO : amountNative,
     isUsed: true,
@@ -577,7 +732,10 @@ export function previewCliffVotingPower(cfg: VsrVotingMintConfig, amountNative: 
  * and Lockup::seconds_left is frozen at (end_ts - start_ts) for Constant lockups. Vesting lockups apply the
  * same rule to each vesting tranche separately.
  */
-export function describeVotingPowerFormula(cfg: VsrVotingMintConfig, tokenName: string): string {
+export function describeVotingPowerFormula(
+  cfg: VsrVotingMintConfig,
+  tokenName: string,
+): string {
   const fmtFactor = (f: BN) => {
     // factor is in 1e-9 units and applies to amount × 10^digit_shift; display with up to 4 decimals
     let v = f.muln(10_000)
@@ -592,7 +750,8 @@ export function describeVotingPowerFormula(cfg: VsrVotingMintConfig, tokenName: 
       : `${(satSecs / 86_400).toFixed(2)} days`
   const extra = fmtFactor(cfg.maxExtraLockupVoteWeightScaledFactor)
   const base = fmtFactor(cfg.baselineVoteWeightScaledFactor)
-  const lockedTerm = extra === '1' ? `locked ${tokenName}` : `locked ${tokenName} × ${extra}`
+  const lockedTerm =
+    extra === '1' ? `locked ${tokenName}` : `locked ${tokenName} × ${extra}`
   const decay = `${lockedTerm} × min(remaining lockup / ${sat}, 1)`
   const formula = cfg.baselineVoteWeightScaledFactor.isZero()
     ? decay

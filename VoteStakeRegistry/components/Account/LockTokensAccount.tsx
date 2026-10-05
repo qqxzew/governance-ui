@@ -48,6 +48,7 @@ import { useConnection } from '@solana/wallet-adapter-react'
 import { useVsrGovpower } from '@hooks/queries/plugins/vsr'
 import { useVsrClient } from '../../../VoterWeightPlugins/useVsrClient'
 import { CUSTOM_BIO_VSR_PLUGIN_PK } from '@constants/plugins'
+import VotingPowerCard from '@components/VotingPowerCard'
 
 interface DepositBox {
   mintPk: PublicKey
@@ -261,6 +262,15 @@ const LockTokensAccount: React.FC<{
           </h1>
 
           <div className="ml-auto flex flex-row">
+            {/* Locking is the primary path (plain deposits may give 0 voting power, see VotingPowerCard) */}
+            {connected && isOwnerOfDeposits && !isZeroMultiplierConfig && (
+              <Button className="mr-3" onClick={() => setIsLockModalOpen(true)}>
+                <div className="flex items-center">
+                  <LockClosedIcon className="h-5 mr-1.5 w-5" />
+                  <span>Lock tokens</span>
+                </div>
+              </Button>
+            )}
             <DepositCommunityTokensBtn
               inAccountDetails={true}
               className="mr-3"
@@ -278,6 +288,14 @@ const LockTokensAccount: React.FC<{
         )}
         {connected ? (
           <div>
+            <VotingPowerCard
+              className="mb-4"
+              wallet={
+                tokenOwnerRecordWalletPk
+                  ? new PublicKey(tokenOwnerRecordWalletPk)
+                  : publicKey ?? undefined
+              }
+            />
             <div className="grid md:grid-cols-3 grid-flow-row gap-4 pb-8">
               {isLoading ? (
                 <>
