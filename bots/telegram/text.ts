@@ -49,10 +49,15 @@ export function untrusted(s: unknown, maxLen = 300, singleLine = true) {
   return truncate(out, maxLen)
 }
 
+/** Truncate to `maxLen` UTF-16 code units (Telegram's unit), never splitting a surrogate pair. */
 export function truncate(s: string, maxLen: number) {
-  const chars = Array.from(s) // don't split surrogate pairs
-  if (chars.length <= maxLen) return s
-  return chars.slice(0, Math.max(0, maxLen - 1)).join('') + '…'
+  if (s.length <= maxLen) return s
+  let out = ''
+  for (const ch of s) {
+    if (out.length + ch.length > maxLen - 1) break
+    out += ch
+  }
+  return out + '…'
 }
 
 /** Final guard for any outgoing message. */
@@ -164,12 +169,11 @@ export function formatDanger(args: {
     'Automated check by an unaudited, evaluation-grade tool. Review the instructions yourself before voting.',
   ]
   const budget =
-    TELEGRAM_MAX_MESSAGE - header.join('\n').length - footer.join('\n').length - 50
-  const perFinding = Math.max(
-    120,
-    Math.floor(budget / Math.max(1, args.findings.length)),
-  )
-  const body = args.findings.map((f) => {
+    TELEGRAM_MAX_MESSAGE - header.join('\n').length - footer.join('\n').length - 80
+  const MIN_PER_FINDING = 200
+  const shown = args.findings.slice(0, Math.max(1, Math.floor(budget / MIN_PER_FINDING)))
+  const perFinding = Math.floor(budget / Math.max(1, shown.length)) - 1
+  const body = shown.map((f) => {
     const ix =
       typeof f.instructionIndex === 'number' ? ` [ix ${f.instructionIndex}]` : ''
     return truncate(
@@ -177,5 +181,8 @@ export function formatDanger(args: {
       perFinding,
     )
   })
+  if (shown.length < args.findings.length) {
+    body.push(`…and ${args.findings.length - shown.length} more (see the proposal page)`)
+  }
   return finalizeMessage([...header, ...body, ...footer].join('\n'))
 }
