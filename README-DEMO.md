@@ -86,7 +86,7 @@ Babel (`.babelrc`), not SWC.
 
 ## 3. Record an offline snapshot
 
-The snapshot goes to `demo/snapshot/rpc.json`. Recording merges into an existing file,
+The snapshot goes to `demo/snapshot/rpc.json.gz`. Recording merges into an existing file,
 so you can record across several sessions.
 
 ```powershell
@@ -198,7 +198,7 @@ Proxy unit tests: `yarn test:scripts` (or `npx jest scripts/__tests__`).
 | Script | What it does |
 | ------ | ------------ |
 | `rpc:live` | Proxy: forward to `UPSTREAM` (default public mainnet), strip Origin, retry 429 |
-| `rpc:record` | Proxy: forward + record into `demo/snapshot/rpc.json` |
+| `rpc:record` | Proxy: forward + record into `demo/snapshot/rpc.json.gz` |
 | `rpc:replay` | Proxy: serve only from the snapshot (no network) |
 | `dev:mainnet` | `next dev` with `REALM=MNDE`, mainnet RPC = proxy, read-only mainnet |
 | `dev:mainnet:proxy` | `rpc:live` + `dev:mainnet` in one terminal |

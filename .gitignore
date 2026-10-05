@@ -55,3 +55,7 @@ demo/snapshot/*.tmp
 
 # Telegram bot runtime state (subscriptions, chat ids)
 bots/telegram/data/
+
+# uncompressed demo snapshot (commit only rpc.json.gz)
+demo/snapshot/rpc.json
+demo/snapshot/*.tmp

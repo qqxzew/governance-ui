@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // Offline check of a recorded RPC snapshot (no network needed).
 //
-//   node demo/verify-replay.js [--snapshot demo/snapshot/rpc.json]
+//   node demo/verify-replay.js [--snapshot demo/snapshot/rpc.json.gz]
 //
 // 1. Starts the rpc-proxy in replay mode in-process on a free port.
 // 2. Replays every recorded request (single + batched, with fresh ids) and
@@ -18,7 +18,7 @@ const { createProxy, loadSnapshot } = require('../scripts/rpc-proxy')
 const args = process.argv.slice(2)
 const snapIdx = args.indexOf('--snapshot')
 const SNAPSHOT = path.resolve(
-  snapIdx >= 0 ? args[snapIdx + 1] : 'demo/snapshot/rpc.json',
+  snapIdx >= 0 ? args[snapIdx + 1] : 'demo/snapshot/rpc.json.gz',
 )
 
 // Accounts the demo needs (see README-DEMO.md).

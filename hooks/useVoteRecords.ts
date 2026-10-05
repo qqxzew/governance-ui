@@ -32,6 +32,9 @@ import { useAsync } from 'react-async-hook'
 import { useVsrClient } from '../VoterWeightPlugins/useVsrClient'
 import { useNftRegistrar } from '@hooks/useNftRegistrar'
 
+// See the undecided-voters effect below: per-wallet VSR power costs one simulation per wallet.
+const MAX_UNDECIDED_VSR_LOOKUPS = 300
+
 export default function useVoteRecords(proposal?: ProgramAccount<Proposal>) {
   const { getRpcContext } = useRpcContext()
   const [voteRecords, setVoteRecords] = useState<ProgramAccount<VoteRecord>[]>(
@@ -230,8 +233,11 @@ export default function useVoteRecords(proposal?: ProgramAccount<Proposal>) {
                 tokenOwnerRecord.account.governingTokenOwner.toBase58(),
             ),
       )
+      // One log_voter_info simulation per undecided wallet: for large VSR DAOs (Marinade: ~18k
+      // members) that is hundreds of batched RPC calls per page view, so skip it above the cap.
       if (
         undecidedData.length &&
+        undecidedData.length <= MAX_UNDECIDED_VSR_LOOKUPS &&
         mintsUsedInRealm.length &&
         realm &&
         vsrClient

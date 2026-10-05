@@ -40,6 +40,7 @@
 const http = require('http')
 const https = require('https')
 const fs = require('fs')
+const zlib = require('zlib')
 const path = require('path')
 const crypto = require('crypto')
 
@@ -168,7 +169,11 @@ function loadSnapshot(file, { mustExist }) {
     if (mustExist) throw new Error(`snapshot not found: ${file}`)
     return emptySnapshot()
   }
-  const snap = JSON.parse(fs.readFileSync(file, 'utf8'))
+  // *.gz snapshots are gzip-compressed JSON (keeps the committed demo snapshot under GitHub's 100 MB limit)
+  const raw = fs.readFileSync(file)
+  const snap = JSON.parse(
+    (file.endsWith('.gz') ? zlib.gunzipSync(raw) : raw).toString('utf8'),
+  )
   snap.entries = snap.entries || {}
   snap.loose = snap.loose || {}
   snap.latest = snap.latest || {}
@@ -184,7 +189,10 @@ function saveSnapshot(file, snap, secrets = []) {
     throw new Error('refusing to save: snapshot would contain the upstream key')
   }
   const tmp = file + '.tmp'
-  fs.writeFileSync(tmp, json)
+  fs.writeFileSync(
+    tmp,
+    file.endsWith('.gz') ? zlib.gzipSync(json, { level: 9 }) : json,
+  )
   fs.renameSync(tmp, file)
 }
 
