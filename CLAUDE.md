@@ -69,3 +69,11 @@ Owner/folder map (parallel agents; each touches only its folders + listed files)
 - **Build/demo infra**: `scripts/rpc-proxy.js` (record/replay), `package.json` scripts, `.env.sample`, app shell banners (`components/` layout, TermsPopup), `README-DEMO.md`.
 Rules for all: no new npm deps without asking the lead (yarn.lock churn, slow installs); `git add` only your own paths, commit with a clear message, retry if `index.lock` exists; never commit `.env`; Windows + PowerShell instructions in docs.
 Dev: Node 22, `yarn install --frozen-lockfile --ignore-engines --ignore-scripts`; jest works: `npx jest <path>` (~30 s startup). `next dev` first compile ~4 min (Babel, .babelrc).
+
+## Verified 2026-10-05 (evening)
+- Original UI in Chrome: MIP-23 shows only generic yellow "Instructions like this one are dangerous"; MIP-24 shows NO warning.
+- VSR math port (tools/vsr) is bit-exact vs the deployed program for 7 mainnet voters (simulated update_voter_weight_record + log_voter_info). Marinade VSR branch HEAD 2515cba7eb5a. Weight unit = native MNDE (digit_shift 0). log_voter_info(0,32) in one ix runs out of heap: split into 4x8.
+- Vote flow already puts VSR update_voter_weight_record in the same tx as castVote (actions/castVote.ts:261-283, 383-404).
+- Known gaps: castVote.ts:256-258 sends no vote ix when weight is 0; VSRVotingPower "Deposited" ignores expired cliffs; read-only mainnet guard may block lock/deposit on mainnet (intended for demo).
+- jsdom tests need `@jest-environment-options {"customExportConditions": ["node","node-addons"]}` (uuid ESM).
+- Handoff state and next steps: see HANDOFF.md.
