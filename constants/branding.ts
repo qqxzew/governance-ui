@@ -12,3 +12,6 @@ export const UPSTREAM_REPO_URL =
 
 export const EVALUATION_NOTICE = 'Unaudited, evaluation-grade.'
 export const READ_ONLY_MAINNET_NOTICE = 'Mainnet is read-only in this demo.'
+
+export const FORK_REPO_URL = 'https://github.com/qqxzew/governance-ui'
+export const APP_TAGLINE = 'Know what you vote for'

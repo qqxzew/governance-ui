@@ -331,10 +331,21 @@ export const ProposalSafetyReportView = ({
 const ProposalSafetyPanel = () => {
   const { data, isLoading, error } = useProposalSafetyQuery()
   const report = data?.report
+  const accent =
+    report?.maxSeverity === 'red'
+      ? 'border-l-red-500'
+      : report?.maxSeverity === 'yellow'
+      ? 'border-l-yellow-400'
+      : 'border-l-primary-light'
   return (
-    <div className="rounded-lg border border-fgd-4 p-4 space-y-4">
+    <div
+      className={`rounded-lg border border-bkg-4 border-l-4 ${accent} bg-bkg-2 p-4 space-y-4 shadow-lg`}
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="mb-0 flex items-center">
+          <span className="mr-3 rounded border border-primary-light px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-primary-light">
+            Safety check
+          </span>
           <SeverityIcon
             severity={report?.maxSeverity ?? 'none'}
             className={`h-5 w-5 mr-2 ${

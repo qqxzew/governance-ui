@@ -268,6 +268,10 @@ export interface ProposalSafetyInput {
   }
   mints: Record<string, { decimals: number; symbol?: string }>
   knownPayees: KnownPayeeInput[]
+  /** how complete the payment-history scan behind knownPayees is (absent in older fixtures = 'complete') */
+  knownPayeesStatus?: 'complete' | 'partial' | 'not-loaded'
+  /** human-readable description of the scanned history, e.g. "last 1000 treasury transactions" */
+  knownPayeesScope?: string
   /** program id -> info (programs referenced by the proposal + DAO-governed programs) */
   programs: Record<string, ProgramInfoInput>
   /** upgrade buffers referenced by the proposal */
