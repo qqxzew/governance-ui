@@ -28,7 +28,10 @@ import {
   VOTER_DISCRIMINATOR,
   VOTER_WEIGHT_RECORD_DISCRIMINATOR,
   SECS_PER_DAY,
+  describeVotingPowerFormula,
+  previewLockVotingPower,
 } from '../votingPower'
+import { parseVoterInfoFromLogs } from '../simulate'
 
 const FIXTURE_DIR = path.join(__dirname, '..', '..', '..', 'fixtures', 'marinade', 'vsr')
 const fixtures = fs
@@ -138,5 +141,37 @@ describe('decay explanation used in the UI (Marinade config: baseline 0, factor 
   })
   it('unlocked deposit (LockupKind::None) = 0', () => {
     expect(previewCliffVotingPower(cfg, amount, new BN(0), LockupKind.None).toString()).toBe('0')
+  })
+})
+
+describe('UI helpers', () => {
+  const registrar = decodeRegistrar(Buffer.from(fixtures[0].accounts.registrarDataBase64, 'base64'))
+  const cfg = registrar.votingMints[0]
+  it('decay sentence generated from the Marinade registrar is the documented one', () => {
+    expect(describeVotingPowerFormula(cfg, 'MNDE')).toBe(
+      "Your voting power = locked MNDE × min(remaining lockup / 31 days, 1); it shrinks as your lockup runs out unless it's a constant lockup.",
+    )
+  })
+  it('previewLockVotingPower (Lockup::new_from_periods semantics)', () => {
+    const amount = new BN('31000000000')
+    expect(previewLockVotingPower(cfg, amount, LockupKind.Cliff, 31).toString()).toBe('31000000000')
+    expect(previewLockVotingPower(cfg, amount, LockupKind.Constant, 10).toString()).toBe('10000000000')
+    expect(previewLockVotingPower(cfg, amount, LockupKind.None, 0).toString()).toBe('0')
+    // 2 monthly tranches of 15.5 MNDE: first unlocks in 30.4d (< 31d), second in 60.8d (saturated)
+    // = 15.5 × 2628000/2678400 + 15.5 = computed by voting_power_linear_vesting
+    const monthly = previewLockVotingPower(cfg, amount, LockupKind.Monthly, 2)
+    expect(monthly.toString()).toBe(
+      amount.mul(new BN(2628000 + 2678400)).div(new BN(2 * 2678400)).toString(),
+    )
+  })
+  it('parses the VoterInfo event from simulation logs', () => {
+    const data = Buffer.concat([
+      Buffer.from([95, 159, 197, 100, 178, 17, 75, 128]),
+      new BN('4080258784073').toArrayLike(Buffer, 'le', 8),
+      new BN(0).toArrayLike(Buffer, 'le', 8),
+    ])
+    const r = parseVoterInfoFromLogs(['Program log: voter', 'Program data: ' + data.toString('base64')])
+    expect(r?.votingPower.toString()).toBe('4080258784073')
+    expect(r?.votingPowerBaseline.toString()).toBe('0')
   })
 })

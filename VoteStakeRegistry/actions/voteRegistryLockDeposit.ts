@@ -12,6 +12,7 @@ import { LockupType } from 'VoteStakeRegistry/sdk/accounts'
 import { withCreateNewDeposit } from '../sdk/withCreateNewDeposit'
 import { getPeriod } from 'VoteStakeRegistry/tools/deposits'
 import { VsrClient } from 'VoteStakeRegistry/sdk/client'
+import { simulateVsrBeforeSign } from 'VoteStakeRegistry/tools/simulateBeforeSign'
 import { CUSTOM_BIO_VSR_PLUGIN_PK } from '@constants/plugins'
 
 export const voteRegistryLockDeposit = async ({
@@ -131,6 +132,16 @@ export const voteRegistryLockDeposit = async ({
 
     instructions.push(resetLockup)
   }
+
+  // Simulate before asking the wallet to sign: throws on failure, shows expected voting power on success
+  await simulateVsrBeforeSign({
+    connection,
+    walletPk: rpcContext.walletPubkey,
+    instructions,
+    vsrProgramId: client.program.programId,
+    realmPk,
+    communityMintPk,
+  })
 
   const transaction = new Transaction()
   transaction.add(...instructions)

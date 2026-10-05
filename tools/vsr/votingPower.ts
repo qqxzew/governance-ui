@@ -529,6 +529,30 @@ export function unlockedDepositsHaveNoVotingPower(registrar: VsrRegistrar, mint:
 }
 
 /**
+ * Voting power a NEW deposit would have the moment it is created with `periods` lockup periods of `kind`
+ * (lockup.rs `Lockup::new_from_periods` with start_ts = curr_ts, then `DepositEntry::voting_power`).
+ * Periods: Daily/Cliff/Constant = days, Monthly = months of SECS_PER_MONTH, None = 0.
+ */
+export function previewLockVotingPower(
+  cfg: VsrVotingMintConfig,
+  amountNative: BN,
+  kind: LockupKind,
+  periods: number,
+): BN {
+  if (!Number.isInteger(periods) || periods < 0) throw new VsrMathError('InvalidLockupPeriod')
+  const endTs = periodSecs(kind).muln(periods)
+  const d: VsrDepositEntry = {
+    lockup: { startTs: ZERO, endTs, kind },
+    amountDepositedNative: amountNative,
+    amountInitiallyLockedNative: amountNative,
+    isUsed: true,
+    allowClawback: false,
+    votingMintConfigIdx: 0,
+  }
+  return depositVotingPower(d, cfg, ZERO)
+}
+
+/**
  * Voting power a fresh deposit of `amountNative` would have right now for a lockup of `lockupSecs`
  * (Cliff/Constant semantics; for vesting kinds build a VsrDepositEntry and call depositVotingPower).
  */
@@ -542,4 +566,36 @@ export function previewCliffVotingPower(cfg: VsrVotingMintConfig, amountNative: 
     votingMintConfigIdx: 0,
   }
   return depositVotingPower(d, cfg, ZERO)
+}
+
+/**
+ * One-sentence explanation of the decay rule, generated from the registrar config (not hardcoded).
+ * For Marinade (baseline 0, max extra 1.0, saturation 31 days, digit_shift 0) this yields exactly:
+ * "Your voting power = locked MNDE × min(remaining lockup / 31 days, 1); it shrinks as your lockup runs out
+ *  unless it's a constant lockup."
+ * Derivation: DepositEntry::voting_power = baseline(deposited) + max_extra(locked) × min(seconds_left, sat) / sat,
+ * and Lockup::seconds_left is frozen at (end_ts - start_ts) for Constant lockups. Vesting lockups apply the
+ * same rule to each vesting tranche separately.
+ */
+export function describeVotingPowerFormula(cfg: VsrVotingMintConfig, tokenName: string): string {
+  const fmtFactor = (f: BN) => {
+    // factor is in 1e-9 units and applies to amount × 10^digit_shift; display with up to 4 decimals
+    let v = f.muln(10_000)
+    if (cfg.digitShift >= 0) v = v.mul(new BN(10).pow(new BN(cfg.digitShift)))
+    else v = v.div(new BN(10).pow(new BN(-cfg.digitShift)))
+    return (v.div(SCALED_FACTOR_BASE).toNumber() / 10_000).toString()
+  }
+  const satSecs = cfg.lockupSaturationSecs.toNumber()
+  const sat =
+    satSecs % 86_400 === 0
+      ? `${satSecs / 86_400} day${satSecs === 86_400 ? '' : 's'}`
+      : `${(satSecs / 86_400).toFixed(2)} days`
+  const extra = fmtFactor(cfg.maxExtraLockupVoteWeightScaledFactor)
+  const base = fmtFactor(cfg.baselineVoteWeightScaledFactor)
+  const lockedTerm = extra === '1' ? `locked ${tokenName}` : `locked ${tokenName} × ${extra}`
+  const decay = `${lockedTerm} × min(remaining lockup / ${sat}, 1)`
+  const formula = cfg.baselineVoteWeightScaledFactor.isZero()
+    ? decay
+    : `deposited ${tokenName}${base === '1' ? '' : ` × ${base}`} + ${decay}`
+  return `Your voting power = ${formula}; it shrinks as your lockup runs out unless it's a constant lockup.`
 }
