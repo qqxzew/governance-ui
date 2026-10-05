@@ -16,6 +16,7 @@
     "test": "jest",
     "test-all": "yarn lint && yarn type-check && yarn test",
     "notifier": "ts-node scripts/governance-notifier.ts",
+    "bot": "ts-node -P bots/telegram/tsconfig.json bots/telegram/index.ts",
     "setup": "yarn install && yarn allow-scripts && yarn bigint-fix",
     "ci": "yarn install --frozen-lockfile --network-concurrency 1 --color=always && yarn allow-scripts && yarn bigint-fix",
     "deduplicate": "npx yarn-deduplicate",
