@@ -30,6 +30,7 @@ import ProposalVotingPower from '@components/ProposalVotingPower'
 import { useMediaQuery } from 'react-responsive'
 import NftProposalVoteState from 'NftVotePlugin/NftProposalVoteState'
 import ProposalWarnings from './ProposalWarnings'
+import ProposalSafetyPanel from '@components/ProposalSafety/ProposalSafetyPanel'
 import useWalletOnePointOh from '@hooks/useWalletOnePointOh'
 import VotingRules from '@components/VotingRules'
 import { useRouteProposalQuery } from '@hooks/queries/proposal'
@@ -251,6 +252,7 @@ const Proposal = () => {
             {proposal.account && (
               <ProposalWarnings proposal={proposal.account} />
             )}
+            <ProposalSafetyPanel />
             <TransactionPanel />
             {isTwoCol && allowDiscussion && <DiscussionPanel />}
           </>

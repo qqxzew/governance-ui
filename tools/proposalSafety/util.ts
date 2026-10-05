@@ -9,7 +9,10 @@ export function b64ToBytes(b64: string): Buffer {
 
 export function readU64(buf: Buffer, offset: number): bigint {
   if (buf.length < offset + 8) throw new Error('u64 out of range')
-  return buf.readBigUInt64LE(offset)
+  // two u32 reads: the browser Buffer polyfill (buffer@5) has no readBigUInt64LE
+  const lo = BigInt(buf.readUInt32LE(offset))
+  const hi = BigInt(buf.readUInt32LE(offset + 4))
+  return (hi << BigInt(32)) + lo
 }
 
 export function readPubkey(buf: Buffer, offset: number): string {

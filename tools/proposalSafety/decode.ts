@@ -601,7 +601,7 @@ export function decodeGovernance(accounts: AccountMetaInput[], data: Buffer): De
 // VSR
 // ---------------------------------------------------------------------------
 export function decodeVsr(accounts: AccountMetaInput[], data: Buffer): Decoded {
-  const disc = data.subarray(0, 8).toString('hex')
+  const disc = Buffer.from(data.subarray(0, 8)).toString('hex')
   if (disc !== VSR_CONFIGURE_VOTING_MINT_DISC) return { type: 'vsr-other', discriminator: disc }
   const r = new Reader(data)
   r.o = 8

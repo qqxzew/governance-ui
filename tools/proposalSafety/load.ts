@@ -58,6 +58,7 @@ import {
   VSR_PROGRAMS,
 } from './constants'
 import { decodeInstruction } from './decode'
+import { readU64 } from './util'
 
 export interface LoadOptions {
   programId?: PublicKey
@@ -65,6 +66,10 @@ export interface LoadOptions {
   fetchDescription?: boolean
   /** derive known payees from executed proposals. default true */
   includeKnownPayees?: boolean
+  /** parallel RPC requests for per-owner / per-governance scans. default 4 (use 1 on the public RPC) */
+  concurrency?: number
+  /** time budget for the payment-history scan (default 25 s); partial results are flagged */
+  knownPayeesTimeoutMs?: number
   /** reuse a realm context (e.g. from a snapshot) */
   realmContext?: RealmSafetyContext
   log?: (msg: string) => void
@@ -79,6 +84,8 @@ export interface RealmSafetyContext {
   tokenAccounts: TokenAccountInput[]
   mints: ProposalSafetyInput['mints']
   knownPayees: KnownPayeeInput[]
+  knownPayeesStatus: 'complete' | 'partial' | 'not-loaded'
+  knownPayeesScope?: string
   /** DAO-governed programs + voter-weight plugins */
   programs: Record<string, ProgramInfoInput>
 }
@@ -96,12 +103,26 @@ export async function withRetry<T>(fn: () => Promise<T>, what = 'rpc', tries = 9
     } catch (e) {
       lastErr = e
       const msg = String((e as Error)?.message ?? e)
-      const retryable = /429|Too many|rate|timed? ?out|fetch failed|ECONNRESET|503|502|socket/i.test(msg)
+      const retryable = /429|Too many|rate|timed? ?out|fetch failed|ECONNRESET|503|502|socket|overloaded|try again/i.test(msg)
       if (!retryable) throw e
       await sleep(Math.min(15000, 500 * Math.pow(2, i)) + Math.floor(Math.random() * 200))
     }
   }
   throw new Error(`${what} failed after ${tries} tries: ${String((lastErr as Error)?.message ?? lastErr)}`)
+}
+
+/** Run fn over items with at most `limit` in flight (order of results preserved). */
+async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = new Array(items.length)
+  let next = 0
+  const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, async () => {
+    while (next < items.length) {
+      const i = next++
+      out[i] = await fn(items[i])
+    }
+  })
+  await Promise.all(workers)
+  return out
 }
 
 /** base58 of a single byte (< 58) — used for account-type memcmp filters */
@@ -254,12 +275,17 @@ export async function loadRealmSafetyContext(
   const tokenAccounts: TokenAccountInput[] = []
   const mints: ProposalSafetyInput['mints'] = {}
   const owners = [...govs.map((g) => g.pubkey), ...treasuries]
-  for (const owner of owners) {
-    // raw (not jsonParsed): the public RPC rate-limits getParsedTokenAccountsByOwner much harder
+  const concurrency = opts.concurrency ?? 4
+  // raw (not jsonParsed): the public RPC rate-limits getParsedTokenAccountsByOwner much harder
+  const byOwner = await mapLimit(owners, concurrency, async (owner) => {
     const res = await withRetry(
       () => connection.getTokenAccountsByOwner(owner, { programId: pk(TOKEN_PROGRAM) }, 'confirmed'),
       'getTokenAccountsByOwner',
     )
+    if (concurrency <= 1) await sleep(600)
+    return res
+  })
+  for (const res of byOwner) {
     for (const a of res.value) {
       const d = a.account.data
       if (d.length < 72) continue
@@ -268,12 +294,11 @@ export async function loadRealmSafetyContext(
         address: a.pubkey.toBase58(),
         owner: new PublicKey(d.subarray(32, 64)).toBase58(),
         mint,
-        amount: d.readBigUInt64LE(64).toString(),
+        amount: readU64(d, 64).toString(),
         decimals: 0,
         symbol: KNOWN_MINT_SYMBOLS[mint],
       })
     }
-    await sleep(600)
   }
   const mintList = Array.from(new Set(tokenAccounts.map((t) => t.mint)))
   const mintInfos = await getMultiple(connection, mintList.map(pk), { offset: 0, length: 82 })
@@ -307,9 +332,18 @@ export async function loadRealmSafetyContext(
   const programs = await loadPrograms(connection, [...progIds], governances)
 
   let knownPayees: KnownPayeeInput[] = []
+  let knownPayeesStatus: RealmSafetyContext['knownPayeesStatus'] = 'not-loaded'
+  let knownPayeesScope: string | undefined
   if (opts.includeKnownPayees !== false) {
     log('deriving known payees from executed proposals')
-    knownPayees = await loadKnownPayees(connection, programId, govs.map((g) => g.pubkey), log)
+    const kp = await loadKnownPayees(connection, programId, govs.map((g) => g.pubkey), {
+      concurrency,
+      log,
+      timeoutMs: opts.knownPayeesTimeoutMs,
+    })
+    knownPayees = kp.payees
+    knownPayeesStatus = kp.status
+    knownPayeesScope = kp.scope
   }
 
   return {
@@ -333,6 +367,8 @@ export async function loadRealmSafetyContext(
     tokenAccounts,
     mints,
     knownPayees,
+    knownPayeesStatus,
+    knownPayeesScope,
     programs,
   }
 }
@@ -360,41 +396,109 @@ async function loadPrograms(
   return out
 }
 
-/** Destinations paid by executed transactions of this DAO's past proposals. */
-async function loadKnownPayees(
+export interface KnownPayeesResult {
+  payees: KnownPayeeInput[]
+  /** complete = every executed transaction inspected; partial = bounded by time/size */
+  status: 'complete' | 'partial'
+  /** human description of what was scanned */
+  scope: string
+}
+
+export interface KnownPayeesOptions {
+  concurrency?: number
+  /** overall budget; when exceeded the scan stops and returns what it has (status 'partial'). default 25 s */
+  timeoutMs?: number
+  /** most recent executed proposal transactions to inspect. default 1500 */
+  maxTransactions?: number
+  log?: (m: string) => void
+}
+
+/**
+ * Destinations paid by executed transactions of this DAO's past proposals.
+ * Bounded: newest proposals first, at most `maxTransactions`, and stops at `timeoutMs`.
+ */
+export async function loadKnownPayees(
   connection: Connection,
   programId: PublicKey,
   governances: PublicKey[],
-  log: (m: string) => void,
-): Promise<KnownPayeeInput[]> {
-  const txAddrs: { addr: PublicKey; proposal: string }[] = []
-  for (const g of governances) {
-    for (const t of [GovernanceAccountType.ProposalV2, GovernanceAccountType.ProposalV1]) {
-      const res = await withRetry(
-        () => connection.getProgramAccounts(programId, { commitment: 'confirmed', filters: [typeFilter(t), keyFilter(1, g)] }),
-        'getProgramAccounts(proposals)',
-      )
-      for (const a of res) {
-        let p: Proposal
-        try {
-          p = GovernanceAccountParser(Proposal)(a.pubkey, a.account).account
-        } catch {
-          continue
-        }
-        if (!EXECUTED_STATES.has(p.state)) continue
-        const version = t === GovernanceAccountType.ProposalV1 ? 1 : 2
-        const counts = version === 1 ? [p.instructionsCount ?? 0] : p.options.map((o) => o.instructionsCount ?? 0)
-        for (let oi = 0; oi < counts.length; oi++)
-          for (let ti = 0; ti < counts[oi]; ti++)
-            txAddrs.push({ addr: await getProposalTransactionAddress(programId, version, a.pubkey, oi, ti), proposal: a.pubkey.toBase58() })
+  opts: KnownPayeesOptions = {},
+): Promise<KnownPayeesResult> {
+  const log = opts.log ?? (() => undefined)
+  const concurrency = opts.concurrency ?? 4
+  const deadline = Date.now() + (opts.timeoutMs ?? 25_000)
+  const maxTx = opts.maxTransactions ?? 1500
+  const late = () => Date.now() > deadline
+  let partial = false
+
+  const scans = governances.flatMap((g) =>
+    [GovernanceAccountType.ProposalV2, GovernanceAccountType.ProposalV1].map((t) => ({ g, t })),
+  )
+  const results = await mapLimit(scans, concurrency, async ({ g, t }) => {
+    if (late()) {
+      partial = true
+      return { t, res: [] as { pubkey: PublicKey; account: AccountInfo<Buffer> }[] }
+    }
+    const res = await withRetry(
+      () =>
+        connection.getProgramAccounts(programId, {
+          commitment: 'confirmed',
+          filters: [typeFilter(t), keyFilter(1, g)],
+        }),
+      'getProgramAccounts(proposals)',
+    )
+    if (concurrency <= 1) await sleep(150)
+    return { t, res }
+  })
+
+  // executed proposals, newest first
+  const executed: { pubkey: PublicKey; version: number; counts: number[]; draftAt: number }[] = []
+  for (const { t, res } of results) {
+    for (const a of res) {
+      let p: Proposal
+      try {
+        p = GovernanceAccountParser(Proposal)(a.pubkey, a.account).account
+      } catch {
+        continue
       }
-      await sleep(150)
+      if (!EXECUTED_STATES.has(p.state)) continue
+      const version = t === GovernanceAccountType.ProposalV1 ? 1 : 2
+      const counts =
+        version === 1 ? [p.instructionsCount ?? 0] : p.options.map((o) => o.instructionsCount ?? 0)
+      executed.push({ pubkey: a.pubkey, version, counts, draftAt: bnNum(p.draftAt) ?? 0 })
     }
   }
-  log(`known payees: ${txAddrs.length} transactions to inspect`)
-  const infos = await getMultiple(connection, txAddrs.map((t) => t.addr))
+  executed.sort((x, y) => y.draftAt - x.draftAt)
+  const txAddrs: { addr: PublicKey; proposal: string }[] = []
+  let proposalsScanned = 0
+  for (const e of executed) {
+    const n = e.counts.reduce((s, c) => s + c, 0)
+    if (txAddrs.length + n > maxTx) {
+      partial = true
+      break
+    }
+    proposalsScanned++
+    for (let oi = 0; oi < e.counts.length; oi++)
+      for (let ti = 0; ti < e.counts[oi]; ti++)
+        txAddrs.push({
+          addr: await getProposalTransactionAddress(programId, e.version, e.pubkey, oi, ti),
+          proposal: e.pubkey.toBase58(),
+        })
+  }
+  log(`known payees: ${txAddrs.length} transactions of ${proposalsScanned} executed proposals to inspect`)
+
+  const infos: (AccountInfo<Buffer> | null)[] = []
+  for (let i = 0; i < txAddrs.length; i += 100) {
+    if (late()) {
+      partial = true
+      break
+    }
+    infos.push(...(await getMultiple(connection, txAddrs.slice(i, i + 100).map((t) => t.addr))))
+  }
   const payees: KnownPayeeInput[] = []
-  const ctx = { governanceProgramIds: new Set([programId.toBase58(), ...Object.keys(GOVERNANCE_PROGRAMS)]), vsrProgramIds: new Set(Object.keys(VSR_PROGRAMS)) }
+  const ctx = {
+    governanceProgramIds: new Set([programId.toBase58(), ...Object.keys(GOVERNANCE_PROGRAMS)]),
+    vsrProgramIds: new Set(Object.keys(VSR_PROGRAMS)),
+  }
   infos.forEach((info, i) => {
     if (!info) return
     let tx: ProposalTransaction
@@ -420,20 +524,31 @@ async function loadKnownPayees(
           : d.type === 'token-approve'
           ? d.delegate
           : null
-      if (dest) payees.push({ address: dest, proposal: txAddrs[i].proposal, executedAt, mint: d.type === 'token-transfer' ? d.mint : undefined })
+      if (dest)
+        payees.push({
+          address: dest,
+          proposal: txAddrs[i].proposal,
+          executedAt,
+          mint: d.type === 'token-transfer' ? d.mint : undefined,
+        })
     }
   })
-  // owners of token-account destinations
+  // owners of token-account destinations (skipped when out of time: addresses still match)
   const uniq = Array.from(new Set(payees.map((p) => p.address)))
-  const owners = await getMultiple(connection, uniq.map(pk), { offset: 0, length: 64 })
   const ownerOf = new Map<string, { owner: string; mint: string }>()
-  uniq.forEach((a, i) => {
-    const info = owners[i]
-    if (!info) return
-    const prog = info.owner.toBase58()
-    if ((prog === TOKEN_PROGRAM || prog === TOKEN_2022_PROGRAM) && info.data.length >= 64)
-      ownerOf.set(a, { mint: new PublicKey(info.data.subarray(0, 32)).toBase58(), owner: new PublicKey(info.data.subarray(32, 64)).toBase58() })
-  })
+  if (!late()) {
+    const owners = await getMultiple(connection, uniq.map(pk), { offset: 0, length: 64 })
+    uniq.forEach((a, i) => {
+      const info = owners[i]
+      if (!info) return
+      const prog = info.owner.toBase58()
+      if ((prog === TOKEN_PROGRAM || prog === TOKEN_2022_PROGRAM) && info.data.length >= 64)
+        ownerOf.set(a, {
+          mint: new PublicKey(info.data.subarray(0, 32)).toBase58(),
+          owner: new PublicKey(info.data.subarray(32, 64)).toBase58(),
+        })
+    })
+  } else partial = true
   for (const p of payees) {
     const o = ownerOf.get(p.address)
     if (o) {
@@ -442,7 +557,11 @@ async function loadKnownPayees(
     }
   }
   payees.sort((a, b) => (a.executedAt ?? 0) - (b.executedAt ?? 0) || a.address.localeCompare(b.address))
-  return payees
+  return {
+    payees,
+    status: partial ? 'partial' : 'complete',
+    scope: `${infos.length} executed transactions of ${proposalsScanned} of ${executed.length} executed proposals`,
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -570,7 +689,7 @@ export async function loadProposalSafetyInput(
     if (owner === TOKEN_PROGRAM || owner === TOKEN_2022_PROGRAM) {
       if (d.length >= 165) {
         const mint = new PublicKey(d.subarray(0, 32)).toBase58()
-        accounts[addr] = { ...base, kind: 'token', mint, owner: new PublicKey(d.subarray(32, 64)).toBase58(), amount: d.readBigUInt64LE(64).toString() }
+        accounts[addr] = { ...base, kind: 'token', mint, owner: new PublicKey(d.subarray(32, 64)).toBase58(), amount: readU64(d, 64).toString() }
         if (!mints[mint]) needMintDecimals.add(mint)
       } else if (d.length >= 82) {
         accounts[addr] = { ...base, kind: 'mint', decimals: d[44] }
@@ -643,9 +762,9 @@ export async function loadProposalSafetyInput(
       votingMints.push({
         mint: new PublicKey(d.subarray(o, o + 32)).toBase58(),
         grantAuthority: new PublicKey(d.subarray(o + 32, o + 64)).toBase58(),
-        baselineVoteWeightScaledFactor: d.readBigUInt64LE(o + 64).toString(),
-        maxExtraLockupVoteWeightScaledFactor: d.readBigUInt64LE(o + 72).toString(),
-        lockupSaturationSecs: d.readBigUInt64LE(o + 80).toString(),
+        baselineVoteWeightScaledFactor: readU64(d, o + 64).toString(),
+        maxExtraLockupVoteWeightScaledFactor: readU64(d, o + 72).toString(),
+        lockupSaturationSecs: readU64(d, o + 80).toString(),
         digitShift: d.readInt8(o + 88),
       })
     }
@@ -687,6 +806,8 @@ export async function loadProposalSafetyInput(
     treasury: { governances: ctx.governances, tokenAccounts: ctx.tokenAccounts },
     mints,
     knownPayees: ctx.knownPayees,
+    knownPayeesStatus: ctx.knownPayeesStatus ?? 'complete',
+    knownPayeesScope: ctx.knownPayeesScope,
     programs,
     buffers,
     accounts,

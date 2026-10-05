@@ -149,6 +149,29 @@ class Ctx {
     return !!o && this.payeeAddrs.has(o)
   }
 
+  /**
+   * true = paid before; false = not in the (complete or partial) history; null = history not loaded.
+   * `text` is the sentence shown to voters.
+   */
+  payee(addr: string): { known: boolean | null; text: string; titleText: string } {
+    const status = this.input.knownPayeesStatus ?? 'complete'
+    if (this.isKnownPayee(addr))
+      return { known: true, text: 'This DAO has paid this address before.', titleText: 'an outside address' }
+    if (status === 'not-loaded')
+      return {
+        known: null,
+        text: 'Payment history is still being checked — cannot tell yet whether this DAO has paid this address before.',
+        titleText: 'an outside address',
+      }
+    if (status === 'partial')
+      return {
+        known: false,
+        text: `This DAO has never paid this address before (as far as the checked history goes: ${this.input.knownPayeesScope ?? 'partial scan'}).`,
+        titleText: 'an address this DAO has never paid',
+      }
+    return { known: false, text: 'This DAO has never paid this address before.', titleText: 'an address this DAO has never paid' }
+  }
+
   symbol(mint: string | undefined): string {
     if (!mint) return 'tokens'
     if (mint === 'SOL') return 'SOL'
@@ -196,7 +219,7 @@ interface IxAnalysis {
   /** what this instruction actually does, for the description check */
   actually?: string
   flags: {
-    outflow?: { severity: Severity; destination: string; destinationOwner?: string; uiAmount: number; rawAmount: bigint; decimals: number; known: boolean }
+    outflow?: { severity: Severity; destination: string; destinationOwner?: string; uiAmount: number; rawAmount: bigint; decimals: number; known: boolean | null }
     pluginReplacement?: boolean
     authorityChange?: boolean
     configChange?: boolean
@@ -294,7 +317,8 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
       return
     }
     res.sensitive = true
-    const known = ctx.isKnownPayee(p.destination)
+    const pv = ctx.payee(p.destination)
+    const known = pv.known
     // Balances: for already-executed instructions the on-chain balance is post-execution;
     // reconstruct the pre-execution balance by adding back executed outflows (approximate).
     let bal = p.sourceBalance
@@ -308,7 +332,7 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
     if (pctTotal !== null) detail(`Share of all DAO ${sym}`, fmtPct(pctTotal))
 
     const big = (pctTotal ?? 0) >= redPct
-    const severity: Severity = !known || big ? 'red' : 'yellow'
+    const severity: Severity = known === false || big ? 'red' : 'yellow'
     const destText =
       `${short(p.destination)}` +
       (destOwner ? ` (a ${sym} account owned by ${short(destOwner)})` : '')
@@ -317,13 +341,13 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
         ? `that is ${fmtPct(pctAcct)} of that treasury account` +
           (pctTotal !== null ? ` and ${fmtPct(pctTotal)} of all ${sym} held by this DAO` : '')
         : `the balance of the source account is unknown`
-    const knownText = known
-      ? 'This DAO has paid this address before.'
-      : 'This DAO has never paid this address before.'
+    const knownText = pv.text
     action.summary = `${p.verb} ${amt} ${sym} from ${ctx.label(p.source)} to ${destText}.`
     const title =
       severity === 'red'
-        ? `Sends ${pctAcct !== null ? fmtPct(pctAcct) + ' of a treasury account' : 'treasury funds'} (${compact} ${sym}) to ${known ? 'an outside address' : 'an address this DAO has never paid'}`
+        ? `Sends ${pctAcct !== null ? fmtPct(pctAcct) + ' of a treasury account' : 'treasury funds'} (${compact} ${sym}) to ${pv.titleText}`
+        : known === null
+        ? `Sends ${compact} ${sym} to an outside address (payment history pending)`
         : `Pays ${compact} ${sym} to a previous payee`
     add({
       id: 'TREASURY_OUTFLOW',
@@ -340,7 +364,7 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
       decimals: p.decimals,
       known,
     }
-    res.actually = `moves ${compact} ${sym}${pctAcct !== null ? ` (${fmtPct(pctAcct)} of a treasury account)` : ''} to ${short(p.destination)}${known ? '' : ', an address this DAO has never paid'}`
+    res.actually = `moves ${compact} ${sym}${pctAcct !== null ? ` (${fmtPct(pctAcct)} of a treasury account)` : ''} to ${short(p.destination)}${known === false ? ', an address this DAO has never paid' : ''}`
   }
 
   switch (d.type) {
@@ -393,15 +417,16 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
       action.summary = `Allow ${ctx.label(d.delegate)} to spend up to ${formatUnits(d.amount, decimals)} ${sym} from ${ctx.label(d.source)}.`
       if (ctx.isDao(d.source) && !ctx.isDao(d.delegate)) {
         res.sensitive = true
-        const known = ctx.isKnownPayee(d.delegate)
+        const pv = ctx.payee(d.delegate)
+        const known = pv.known
         const bal = t?.amount !== undefined ? BigInt(t.amount) : undefined
         const pct = bal !== undefined ? percent(d.amount, bal) : null
-        const sev: Severity = !known || (pct ?? 100) >= redPct ? 'red' : 'yellow'
+        const sev: Severity = known !== true || (pct ?? 100) >= redPct ? 'red' : 'yellow'
         add({
           id: 'TREASURY_OUTFLOW',
           severity: sev,
           title: `Lets an outside address spend ${formatCompact(d.amount, decimals)} ${sym} from the treasury`,
-          explanation: `Approves ${short(d.delegate)} as a delegate who can move up to ${formatUnits(d.amount, decimals)} ${sym} (${fmtPct(pct)} of ${ctx.label(d.source)}) at any time without another vote. ${known ? 'This DAO has paid this address before.' : 'This DAO has never paid this address before.'}`,
+          explanation: `Approves ${short(d.delegate)} as a delegate who can move up to ${formatUnits(d.amount, decimals)} ${sym} (${fmtPct(pct)} of ${ctx.label(d.source)}) at any time without another vote. ${pv.text}`,
         })
         res.flags.outflow = { severity: sev, destination: d.delegate, uiAmount: Number(d.amount) / Math.pow(10, decimals), rawAmount: d.amount, decimals, known }
         res.actually = `lets ${short(d.delegate)} spend ${formatCompact(d.amount, decimals)} ${sym} from the treasury`
@@ -416,14 +441,16 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
       detail('To', ctx.label(d.destination))
       if (!ctx.isDao(d.destination)) {
         res.sensitive = true
-        const known = ctx.isKnownPayee(d.destination)
+        const pv = ctx.payee(d.destination)
+        const known = pv.known
+        const sev: Severity = known === false ? 'red' : 'yellow'
         add({
           id: 'TREASURY_OUTFLOW',
-          severity: known ? 'yellow' : 'red',
-          title: `Mints ${formatCompact(d.amount, decimals)} new ${sym} to ${known ? 'a previous payee' : 'an address this DAO has never paid'}`,
-          explanation: `Creates ${formatUnits(d.amount, decimals)} new ${sym} and sends them to ${ctx.label(d.destination)}. ${known ? 'This DAO has paid this address before.' : 'This DAO has never paid this address before.'}`,
+          severity: sev,
+          title: `Mints ${formatCompact(d.amount, decimals)} new ${sym} to ${known ? 'a previous payee' : pv.titleText}`,
+          explanation: `Creates ${formatUnits(d.amount, decimals)} new ${sym} and sends them to ${ctx.label(d.destination)}. ${pv.text}`,
         })
-        res.flags.outflow = { severity: known ? 'yellow' : 'red', destination: d.destination, uiAmount: Number(d.amount) / Math.pow(10, decimals), rawAmount: d.amount, decimals, known }
+        res.flags.outflow = { severity: sev, destination: d.destination, uiAmount: Number(d.amount) / Math.pow(10, decimals), rawAmount: d.amount, decimals, known }
         res.actually = `mints ${formatCompact(d.amount, decimals)} new ${sym} to ${short(d.destination)}`
       }
       break
@@ -884,7 +911,15 @@ function checkDescription(
     if (CONSOLIDATE_RE.test(text)) {
       const q = quoteOf(CONSOLIDATE_RE)
       claims.push(q)
-      say('red', q, `the funds leave the DAO: ${outs.map((x) => x.actually).join('; ')}`, ' Consolidating would move funds between DAO-owned accounts; these destinations are not owned by the DAO.')
+      const owners = Array.from(
+        new Set(outs.map((x) => short(x.flags.outflow!.destinationOwner ?? x.flags.outflow!.destination))),
+      )
+      say(
+        'red',
+        q,
+        `${outs.length === 1 ? 'the transfer sends' : `all ${outs.length} transfers send`} funds out of the DAO, to ${owners.length === 1 ? 'a wallet' : 'wallets'} the DAO does not control (${owners.join(', ')})`,
+        ' Consolidating would move funds between DAO-owned accounts; these destinations are not owned by the DAO.',
+      )
     }
     // 4. explicit "no funds/transfers" claim
     if (NO_FUNDS_RE.test(text)) {

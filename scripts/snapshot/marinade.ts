@@ -49,7 +49,7 @@ async function main() {
     console.log('reusing', realmFile)
   } else {
     console.log('loading realm context from', RPC)
-    ctx = await loadRealmSafetyContext(connection, PROGRAM, REALM, { log: (m) => console.log(' ', m) })
+    ctx = await loadRealmSafetyContext(connection, PROGRAM, REALM, { concurrency: Number(process.env.CONCURRENCY || 1), log: (m) => console.log(' ', m) })
     fs.writeFileSync(realmFile, JSON.stringify(ctx, null, 1) + '\n')
     console.log(`wrote realm.json: ${ctx.governances.length} governances, ${ctx.tokenAccounts.length} token accounts, ${ctx.knownPayees.length} payee records`)
   }
