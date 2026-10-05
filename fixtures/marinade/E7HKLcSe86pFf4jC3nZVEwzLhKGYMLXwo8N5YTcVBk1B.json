@@ -1,0 +1,1922 @@
+{
+ "version": 1,
+ "snapshotAt": "2026-10-05T19:23:45.375Z",
+ "cluster": "mainnet-beta",
+ "proposal": {
+  "pubkey": "E7HKLcSe86pFf4jC3nZVEwzLhKGYMLXwo8N5YTcVBk1B",
+  "name": "Distribution to partners",
+  "descriptionLink": "",
+  "descriptionText": "",
+  "state": "Completed",
+  "governance": "A8tioq6Joznftd2b6GLY8rrgCka6F81vVztFciWDxEAe",
+  "tokenOwnerRecord": "8PkPc5vS2tRpgsYrnn4npao1ui4sAsbzLyEf4d1xi9XV",
+  "governingTokenMint": "6MGwpuJ5YE1c8jJaF8FKurQdDJeYRf1adX76dovkXxRs",
+  "draftAt": 1745608219,
+  "votingAt": 1745608220
+ },
+ "governance": {
+  "pubkey": "A8tioq6Joznftd2b6GLY8rrgCka6F81vVztFciWDxEAe",
+  "accountType": "GovernanceV2",
+  "governedAccount": "Ekx9YLfo2zEU5Yb5qahDHRLnCkouCNKCdXKS5MvbqPCs",
+  "nativeTreasury": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+  "nativeTreasuryLamports": "12943399",
+  "config": {
+   "communityVoteThreshold": {
+    "type": "Disabled"
+   },
+   "minCommunityTokensToCreateProposal": "18446744073709551615",
+   "minInstructionHoldUpTime": 0,
+   "baseVotingTime": 259200,
+   "communityVoteTipping": "Disabled",
+   "councilVoteThreshold": {
+    "type": "YesVotePercentage",
+    "value": 50
+   },
+   "councilVetoVoteThreshold": {
+    "type": "Disabled"
+   },
+   "minCouncilTokensToCreateProposal": "1",
+   "councilVoteTipping": "Early",
+   "communityVetoVoteThreshold": {
+    "type": "Disabled"
+   },
+   "votingCoolOffTime": 0,
+   "depositExemptProposalCount": 0
+  }
+ },
+ "realm": {
+  "pubkey": "899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo",
+  "name": "Marinade DAO",
+  "programId": "GovMaiHfpVPw8BAM1mbdzgmSZYDw2tdP32J2fapoQoYs",
+  "communityMint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+  "councilMint": "6MGwpuJ5YE1c8jJaF8FKurQdDJeYRf1adX76dovkXxRs",
+  "authority": "FsrqQfLGdFVtySSSsyZJUzVBA9bvGZSKyhp7nsJCqgJe",
+  "minCommunityTokensToCreateGovernance": "18446744073709551615",
+  "communityMintMaxVoteWeightSource": {
+   "type": "SupplyFraction",
+   "value": "10000000000"
+  }
+ },
+ "realmConfig": {
+  "pubkey": "CFsN3hcLSK4sQyeEm9kYg7uNBsygR8xm445r8Kk7CvFK",
+  "communityVoterWeightAddin": "VoteMBhDCqGLRgYpp9o7DGyq81KNmwjXQRAHStjtJsS",
+  "communityMaxVoterWeightAddin": null,
+  "councilVoterWeightAddin": null,
+  "councilMaxVoterWeightAddin": null,
+  "communityTokenType": "Liquid",
+  "councilTokenType": "Membership"
+ },
+ "instructions": [
+  {
+   "index": 0,
+   "txIndex": 0,
+   "ixIndexInTx": 0,
+   "optionIndex": 0,
+   "holdUpTime": 0,
+   "executedAt": 1745789383,
+   "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+   "accounts": [
+    {
+     "pubkey": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+     "isSigner": false,
+     "isWritable": true
+    },
+    {
+     "pubkey": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+     "isSigner": false,
+     "isWritable": true
+    },
+    {
+     "pubkey": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+     "isSigner": true,
+     "isWritable": false
+    }
+   ],
+   "dataBase64": "AwAAOoxZegEA"
+  },
+  {
+   "index": 1,
+   "txIndex": 1,
+   "ixIndexInTx": 0,
+   "optionIndex": 0,
+   "holdUpTime": 0,
+   "executedAt": 1745789383,
+   "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+   "accounts": [
+    {
+     "pubkey": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+     "isSigner": false,
+     "isWritable": true
+    },
+    {
+     "pubkey": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+     "isSigner": false,
+     "isWritable": true
+    },
+    {
+     "pubkey": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+     "isSigner": true,
+     "isWritable": false
+    }
+   ],
+   "dataBase64": "AwC4ePALaQAA"
+  }
+ ],
+ "treasury": {
+  "governances": [
+   {
+    "pubkey": "23xVZXQrHAZ4rm4nWKAM5eTLeUFmstbs42KF21PA4Ayo",
+    "accountType": "GovernanceV2",
+    "governedAccount": "42ZDmqF5tR6K3sTGxegBqS1iGacxeUQzjBeoaEjbczbQ",
+    "nativeTreasury": "AyCAAAd7wsw6zy6cVhDf8gp6Mv4K46T84dUrkg7KX7fy",
+    "nativeTreasuryLamports": "890880",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 2
+     },
+     "minCommunityTokensToCreateProposal": "200000000000000",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "Disabled"
+     },
+     "councilVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCouncilTokensToCreateProposal": "18446744073709551615",
+     "councilVoteTipping": "Disabled",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 86400,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "2aQP7NGhktKR92EsHKSoRzcw5FfcZ8oBWgyoGdB3ouww",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "dstK1PDHNoKN9MdmftRzsEbXP5T1FTBiQBm1Ee3meVd",
+    "nativeTreasury": "E1A7LFK2KASppb5KdH5gJzDFpaYfmrhqJL1SMvKMDnkN",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Early",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 10
+    }
+   },
+   {
+    "pubkey": "2UB1cmriXGWm7qdubatrBnaTyZzvrBcp4cPPmQsVnnb2",
+    "accountType": "GovernanceV2",
+    "governedAccount": "Amxv4PniGvcE8VqMZgWS6eZ1hJyAVixw761C6pA7WnEw",
+    "nativeTreasury": "iV31UriQxtLk4PCSbM3hq9bHh2XAiQY1e75JtJKTZ4D",
+    "nativeTreasuryLamports": "890880",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 2
+     },
+     "minCommunityTokensToCreateProposal": "1000000000000000",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "Disabled"
+     },
+     "councilVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCouncilTokensToCreateProposal": "18446744073709551615",
+     "councilVoteTipping": "Disabled",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 86400,
+     "depositExemptProposalCount": 5
+    }
+   },
+   {
+    "pubkey": "2w6ny74cU6yRxkD6ZACh5M1JznLQ1KB6AUsB7zo2NBHX",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "VoteMBhDCqGLRgYpp9o7DGyq81KNmwjXQRAHStjtJsS",
+    "nativeTreasury": "8h5qPUMbf5JefMBVX9LLjMPYvTrppYCVAheXTJdtkZat",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 2
+     },
+     "minCommunityTokensToCreateProposal": "1000000000000000",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 86400,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "3cBS14yanCZPRKgdCLnmxHWXFfGjW8bid5zxj7UPqWW5",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "LigadctxNRkZied3WuhX525vUhDkuhXNK5DyeijeDnh",
+    "nativeTreasury": "5L7jWrTZqyq1YYWphE3zQwUzYuXWtMPmZWP1XNhHhpgi",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "6egAu2HDLcSgeUYmiBvNLgp7Bd4nPk16gX9MvWuJpeX2",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "GovMaiHfpVPw8BAM1mbdzgmSZYDw2tdP32J2fapoQoYs",
+    "nativeTreasury": "zGrNqxR1KTBtRRNNTdF4ZECku4HTCdU8h6eawtG2qrK",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 2
+     },
+     "minCommunityTokensToCreateProposal": "1000000000000000",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 86400,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "6XQFdWeogb5C8c1KsSCkK6rzzxLxzxsPQqoXge9oJ9xR",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "MR2LqxoSbw831bNy68utpu5n4YqBH3AzDmddkgk9LQv",
+    "nativeTreasury": "5vsLYC3Nq7d3BSB3kGMxSedx3pAb2S1nHy58nvYmJYWr",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "7iUtTuZAh2Len8LiC1u68gUMPMsKh9kce9bcbdGwtBZY",
+    "accountType": "GovernanceV2",
+    "governedAccount": "RAEpqgMZ1SMTzKzVCzH1Y6YF4mYran24zvuNfKiKtUx",
+    "nativeTreasury": "6YAju4nd4t7kyuHV6NvVpMepMk11DgWyYjKVJUak2EEm",
+    "nativeTreasuryLamports": "98023360",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 5
+    }
+   },
+   {
+    "pubkey": "8z6A4qSfL9FFvwX12zqt6HrbzaWthGUqBe4czCn9iXtq",
+    "accountType": "GovernanceV2",
+    "governedAccount": "CztPbF2e93qGyJxuY7Hs93wi32VxuR9cijeqMb11vcAb",
+    "nativeTreasury": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "nativeTreasuryLamports": "200051075",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 2
+     },
+     "minCommunityTokensToCreateProposal": "200000000000000",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 86400,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "A8tioq6Joznftd2b6GLY8rrgCka6F81vVztFciWDxEAe",
+    "accountType": "GovernanceV2",
+    "governedAccount": "Ekx9YLfo2zEU5Yb5qahDHRLnCkouCNKCdXKS5MvbqPCs",
+    "nativeTreasury": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "nativeTreasuryLamports": "12943399",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "AEej7Lywu8EzMznXnxhb1493yCVnmLNXaCKYfUNvQQaJ",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "tovt1VkTE2T4caWoeFP6a2xSFoew5mNpd7FWidyyMuk",
+    "nativeTreasury": "7nS5uYGsNsorW4QCZoKtfNGUCDWFE2xDLJDZrCi3zxUy",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "CLydpgqZty5HQq1uMtbXpH1vtmN7erhdBSPbn12NGLmb",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "va12L6Z9fa5aGJ7gxtJuQZ928nySAk5UetjcGPve3Nu",
+    "nativeTreasury": "EUbGWUKG8cejUob5h1ZcWw2Wp1wZF22s6KDDbE6k3ox3",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "CnPBhNLpwPDY5rw8Wa8bt8DCkRNJ2GoGVf9xb7VYNrRr",
+    "accountType": "GovernanceV2",
+    "governedAccount": "3NmXMPSXtzyKCE6EVKUjWasntR4gtyA2adeAh6t972GL",
+    "nativeTreasury": "BD9XxcmnvbJHgCcX8b2QMXjmcXHQ332NskFvjq6DTByU",
+    "nativeTreasuryLamports": "208331120",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 10
+    }
+   },
+   {
+    "pubkey": "CWRgRr4udD66JbVtS9u2Gu7LHBi5m6SM3ytvmWobThEQ",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "tokdh9ZbWPxkFzqsKqeAwLDk6J6a8NBZtQanVuuENxa",
+    "nativeTreasury": "DwkuFMDJztEDUp1zNw8821q5Ksvxevvzn9jrASMzqrhy",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "FsrqQfLGdFVtySSSsyZJUzVBA9bvGZSKyhp7nsJCqgJe",
+    "accountType": "GovernanceV2",
+    "governedAccount": "EoxRvNBvqD2Az2Cmnt9m1pyZyPGSkVPz58ddzi3ChTyM",
+    "nativeTreasury": "26Pw2qvaHgnvHPD73pWr6EUWchpTF3bEzVbEoDPLS21D",
+    "nativeTreasuryLamports": "492330080",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 10
+    }
+   },
+   {
+    "pubkey": "G6yWqM2RVjhepkVEayeNVqgKNtpMuwtgqDY3s2N3uzas",
+    "accountType": "ProgramGovernanceV2",
+    "governedAccount": "mRefx8ypXNxE59NhoBqwqb3vTvjgf8MYECp4kgJWiDY",
+    "nativeTreasury": "62UkpLKLpuHDYLagLfYgMYHTw68EMCmYKV6TDVkA1tCB",
+    "nativeTreasuryLamports": "0",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 0
+    }
+   },
+   {
+    "pubkey": "M5Fg6GipNvPzWgXNr5wj1EDcp8GB9J53cgyE7YGYLbL",
+    "accountType": "GovernanceV2",
+    "governedAccount": "FW3CkKdHvHjL8DTjh5WkwRopta8ydfeY2vjJC52e5Zk2",
+    "nativeTreasury": "42VJbDihcS81YJPbuhHnHgvo1ehu42j8VK9sNwrnAarR",
+    "nativeTreasuryLamports": "225660880",
+    "config": {
+     "communityVoteThreshold": {
+      "type": "Disabled"
+     },
+     "minCommunityTokensToCreateProposal": "18446744073709551615",
+     "minInstructionHoldUpTime": 0,
+     "baseVotingTime": 259200,
+     "communityVoteTipping": "Disabled",
+     "councilVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 50
+     },
+     "councilVetoVoteThreshold": {
+      "type": "YesVotePercentage",
+      "value": 40
+     },
+     "minCouncilTokensToCreateProposal": "1",
+     "councilVoteTipping": "Early",
+     "communityVetoVoteThreshold": {
+      "type": "Disabled"
+     },
+     "votingCoolOffTime": 0,
+     "depositExemptProposalCount": 10
+    }
+   }
+  ],
+  "tokenAccounts": [
+   {
+    "address": "2aKnUurn5ea2h5DyducNP2tznSCPbkqLQHJXLskhHfme",
+    "owner": "BD9XxcmnvbJHgCcX8b2QMXjmcXHQ332NskFvjq6DTByU",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "2kR2TqMVqMKGqkDCi4qELeBBomAjCVktdWqhqypbMAa5",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "2UaWcrJsSAtQMbRPLtrDkmcbhjUQCqHaUibybfFKqnPf",
+    "owner": "26Pw2qvaHgnvHPD73pWr6EUWchpTF3bEzVbEoDPLS21D",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "3Jqv6oshetZoDK47BzFdqfth5AGJBa5tVo6W9vEDfMDq",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "JEJfVyfJrjf3tZbGgjWWn7igr4xTv4nZhRmxF36nWqLE",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "3soCGKx8dhPB8tZq9xPWhtVgbpSpm1RRJ9Rz6a859Sau",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "2Zo5xo1f1T1T2QPMTEanYo5ztnnWot2bzSFnvsDj5DnN",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "3UXp69ZdiuwgLy3ZuJREmqqNc64Rfkf1BXUF5a5ommmd",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amount": "0",
+    "decimals": 6,
+    "symbol": "USDC"
+   },
+   {
+    "address": "4e4bwFaCkPWDrdsbe3dnQLRkZRWEmtA4X9KQjC8bMf2n",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "5BvQsh5dhn4urafMBBu7A6wKzBkGF3UaC8GwefwHopBZ",
+    "owner": "6YAju4nd4t7kyuHV6NvVpMepMk11DgWyYjKVJUak2EEm",
+    "mint": "Cau4ypffWkedUaVbposA9vMyoJ4n4xtgTmLb9Awxfkhk",
+    "amount": "0",
+    "decimals": 0
+   },
+   {
+    "address": "5fL4Xra9H14maVqKELsywExVAEawigFZXKU9icTeuiSq",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "So11111111111111111111111111111111111111112",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "wSOL"
+   },
+   {
+    "address": "66BeKqpCt5wc6WK3BYvR27crXs659eqcj1p3bJCdyNb1",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    "amount": "823000",
+    "decimals": 6,
+    "symbol": "USDT"
+   },
+   {
+    "address": "66pV53uJ8DJBnEenEczkMW1mPfcu7fhvZnE2e6wJHPkw",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "BzuXXEnEybVqwAAQmCcrwaz1xmvAWohvTgrrKNowV6tZ",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "6dUrKr2pb9FYNksV6vHBxcGWm2Sn97DyXx5bs5Zu41sB",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "54i5nBf8jX4wsGNDtV2kiKXCZT4dw2mJX1qbhwmXkrQN",
+    "amount": "90020659",
+    "decimals": 0
+   },
+   {
+    "address": "6Zpyr9tgxTHMp2GLdZJFRDhnJJhZM3FYX3DVBEfwrYAu",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "89VJ1GAnceiE2zoBF6xBG5nQvrMEDfjXGWvowzVxVfHq",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
+    "amount": "0",
+    "decimals": 6
+   },
+   {
+    "address": "8FTvWuKC5RmM48K2qHYo5ntn8AScuL2cwvg96BsrcVcC",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "54i5nBf8jX4wsGNDtV2kiKXCZT4dw2mJX1qbhwmXkrQN",
+    "amount": "86019518",
+    "decimals": 0
+   },
+   {
+    "address": "8FZPufrEooonMHb3NnpPQtdSLBtf7w2ouafDWBoyqPPW",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "uxPmKrFSjs6NqSpijyMHGAGGrwt5Tt7bfZiabnzVBpr",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "8GW6qcHumGLVhr6HAzA35qqJbXAXgSWZnRdncKo4PphZ",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "9qpA2JZP6K8Up9F57mxNEQJN9wBTSZjwxt1WMTf67WJV",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "9Xb1sGVxtnG6EqQkAJfWrLsPXWF1ztdoNe5YpuS3mRj7",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "A9B2QYuHD1Segtzif37ZLPNokBJzLaXrCqrvrM9zSYoQ",
+    "owner": "6YAju4nd4t7kyuHV6NvVpMepMk11DgWyYjKVJUak2EEm",
+    "mint": "99YtWkwuHokLR2XjP455RnVLEv2WFPkFm2wZxAUkaxvL",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "BYLKtURzaLUZpbQDWBJqt1ELokKWz4coE4CVX9BrvPjU",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "CSyJvzK1fW2AUxyFSzMP9zncdwbbUWeRTbSL9NCX4a5z",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "8SqzGfttiC4Wiv2Fb9AvAyHyUEr8kRqFiN9uxuXCuZEM",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "D5fYxobRFDEWZPvs7SDfNQVMhWXFMHQKWqzsnTg47LyS",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "AbWHBTSsCaD7hQSTxNoDete9jd5KGii1zffUE96Davr3",
+    "amount": "10000000",
+    "decimals": 0
+   },
+   {
+    "address": "DcayyuabKtZAhAfc3sRYEhsE3ZBFrrZoZ31RAY1V2Vwr",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "So11111111111111111111111111111111111111112",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "wSOL"
+   },
+   {
+    "address": "Dgmx2iSWc9jSdxnuXLcum2CcYs7ebsDs6Usfo3u3H6t4",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "EohwxNtFALpSZ7KpFCsC9rkDeKzK7W63i56mfykRAJpL",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "7VF4kQTdojKjQTgRNY5BycHFrtnnPCAAVQbCSK35pump",
+    "amount": "10000000000",
+    "decimals": 6
+   },
+   {
+    "address": "FfBVbXdrRiWVgt7mv3sqVrAznpvWXvoKNTADTGDqBpPz",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNjfT8vVWyDGARYsFsaE3utmWTnzeJtWBK9mXUYpDzp",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "FJCiDdicksG1gnHeG7Gg7RP2m1fbb8cZSRqk6ZahVJ3T",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+    "amount": "997128316",
+    "decimals": 9,
+    "symbol": "mSOL"
+   },
+   {
+    "address": "FVafn2ufZqWsQPg6d6EidJqS69y1SYWzwsUgYqietzY9",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "FqUxdjZJZypor2XbKhis99H7xPwAEh1Mm4ym9bS511q",
+    "amount": "0",
+    "decimals": 0
+   },
+   {
+    "address": "G5AxzZuXx2y4HMCuzc6vNe3qfFPPQJRPQ72TEX1meY2v",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "36116209356539962",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "GKax8AFUTbCwJmzU5i9Tw1uUomZy6bjmsBkqpB3LP7FU",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "5hrT5zyNe9NDG3C1AvuxT3oAfhKNM6uSNQ3fRsxXpump",
+    "amount": "1221796903",
+    "decimals": 6
+   },
+   {
+    "address": "GR1LBT4cU89cJWE74CP6BsJTf2kriQ9TX59tbDsfxgSi",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "153600023536334850",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "117197586954697290",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "HfSfwUn78jtSeuixEtiiAMmkSmNBBHZubWqHZHiy3tVz",
+    "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+    "mint": "5hrT5zyNe9NDG3C1AvuxT3oAfhKNM6uSNQ3fRsxXpump",
+    "amount": "1274473064",
+    "decimals": 6
+   },
+   {
+    "address": "iitf4P2gZuuiX3bEnsX8TGnumnQxG6pbNXE8DuN4NE6",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+    "amount": "29832233349",
+    "decimals": 9,
+    "symbol": "mSOL"
+   },
+   {
+    "address": "MagNPCubGWTvg82riwUCjMto9pjMopithaDp1X5LDKE",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+    "amount": "0",
+    "decimals": 9,
+    "symbol": "MNDE"
+   },
+   {
+    "address": "Qt3GRxccSkv1bKkvUeGYRAzR2RyJGTCPmv3wrLuDxEU",
+    "owner": "6YAju4nd4t7kyuHV6NvVpMepMk11DgWyYjKVJUak2EEm",
+    "mint": "2EzFAY8ZRUH1hpNwVKBgtjbiTWF4gt9CDF35wARMBp3b",
+    "amount": "1",
+    "decimals": 0
+   },
+   {
+    "address": "W9obfYiJgLAX1oDmnYA99CNV7cHMpEGrVyg5Q1a1Wic",
+    "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG",
+    "mint": "7VF4kQTdojKjQTgRNY5BycHFrtnnPCAAVQbCSK35pump",
+    "amount": "10000000000",
+    "decimals": 6
+   }
+  ]
+ },
+ "mints": {
+  "2EzFAY8ZRUH1hpNwVKBgtjbiTWF4gt9CDF35wARMBp3b": {
+   "decimals": 0
+  },
+  "Cau4ypffWkedUaVbposA9vMyoJ4n4xtgTmLb9Awxfkhk": {
+   "decimals": 0
+  },
+  "99YtWkwuHokLR2XjP455RnVLEv2WFPkFm2wZxAUkaxvL": {
+   "decimals": 0
+  },
+  "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey": {
+   "decimals": 9,
+   "symbol": "MNDE"
+  },
+  "7VF4kQTdojKjQTgRNY5BycHFrtnnPCAAVQbCSK35pump": {
+   "decimals": 6
+  },
+  "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So": {
+   "decimals": 9,
+   "symbol": "mSOL"
+  },
+  "JEJfVyfJrjf3tZbGgjWWn7igr4xTv4nZhRmxF36nWqLE": {
+   "decimals": 0
+  },
+  "2Zo5xo1f1T1T2QPMTEanYo5ztnnWot2bzSFnvsDj5DnN": {
+   "decimals": 0
+  },
+  "So11111111111111111111111111111111111111112": {
+   "decimals": 9,
+   "symbol": "wSOL"
+  },
+  "BzuXXEnEybVqwAAQmCcrwaz1xmvAWohvTgrrKNowV6tZ": {
+   "decimals": 0
+  },
+  "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3": {
+   "decimals": 6
+  },
+  "54i5nBf8jX4wsGNDtV2kiKXCZT4dw2mJX1qbhwmXkrQN": {
+   "decimals": 0
+  },
+  "uxPmKrFSjs6NqSpijyMHGAGGrwt5Tt7bfZiabnzVBpr": {
+   "decimals": 0
+  },
+  "8SqzGfttiC4Wiv2Fb9AvAyHyUEr8kRqFiN9uxuXCuZEM": {
+   "decimals": 0
+  },
+  "AbWHBTSsCaD7hQSTxNoDete9jd5KGii1zffUE96Davr3": {
+   "decimals": 0
+  },
+  "MNjfT8vVWyDGARYsFsaE3utmWTnzeJtWBK9mXUYpDzp": {
+   "decimals": 0
+  },
+  "5hrT5zyNe9NDG3C1AvuxT3oAfhKNM6uSNQ3fRsxXpump": {
+   "decimals": 6
+  },
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+   "decimals": 6,
+   "symbol": "USDC"
+  },
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+   "decimals": 6,
+   "symbol": "USDT"
+  },
+  "FqUxdjZJZypor2XbKhis99H7xPwAEh1Mm4ym9bS511q": {
+   "decimals": 0
+  }
+ },
+ "knownPayees": [
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "HUkDxKsHp5fzJeWGMCVeGdZw5j9RSaw3FawvyVkhgL7K",
+   "executedAt": 1683746582,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "AS8eoZLdbghr23RD4teAkJLa8PD2V5U8MhSMjXGVNMk4",
+   "proposal": "6gdEswRAgSDiiyZaXcBvKsy8GckZdK6MmehxNa6menwV",
+   "executedAt": 1683878925,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "MSHRissZyf4nS2E7MShYrK4q5ucsPSqPv3ndw4ZcW4m"
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "d9nXVCo6jAoPjRGTFRXBGoqy65HocGh8BSGNnpu7v5N",
+   "executedAt": 1686207102,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "DmMxgF5PY9jn2ppkoPFxdrs3m3Ue3y9qpg93Pyiko5kA",
+   "proposal": "5nMxoRLL4FMpZ1XKBew2hQF3WzK25SQJ7enVWVVve8cD",
+   "executedAt": 1687696732
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "DCqYQHd56JdcEDmLHVhYSHnvMoALjyNZwcGk4ghonWkf",
+   "executedAt": 1688474226,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "CYaKftDEAHnZrTo9yxsiS8MwWCihwPnAS35r5vdCGQnf",
+   "proposal": "9Uk88VrBB4Yvs8cK5CknKsNDZRA3f5DrCW5MepKoyv5c",
+   "executedAt": 1689626427,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "9eLFKt7U6aRLSGMqvyqRgmBkzWwmTZVfaVEGUqkgmwb"
+  },
+  {
+   "address": "mos1tmp61R7U4DAdb3f95MEhDsCDYvstJnX6Tryrfkb",
+   "proposal": "GcuUGxXEsttu4hWfNGD35anGi78MXXz8LanaChJJLTST",
+   "executedAt": 1690210380,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "EtyVYmVHiQaur3a94vFspYA4rhUVMbfMB3KvdtSBrVpC"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "6gxtPWXVbvJ2aQ3GokZsPy6G9TYhCm83qui1T5DfJA6U",
+   "executedAt": 1690833640,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "BAw8xssf1wtG8XN5h6XcvdtVrZCxykhGhRXt1kjJ3tpm",
+   "executedAt": 1691404979,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "Yurb3K6wh7MbWS7f7b4cPGUsMhU8MMTPrascMHdiPQE",
+   "proposal": "9GY3meTATj3czBqpq8SiJQLvNwqiCc8NFT8fsRmjKQ5E",
+   "executedAt": 1691494341,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "6Hx5nyzhVJDUFt6rogCy5PZV7qWts9Q17xa3YrSksJfn"
+  },
+  {
+   "address": "5JsBHVF9p9DWhKYiTV59S3gdeSVXodMmrv9TGoiLVuEY",
+   "proposal": "DFhUzukvosmhZq3aWejo6Pj6YJm1ofvX87CPxnRCEvdK",
+   "executedAt": 1694119810
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "8i9Q3DYNDgrzNnQSAs98YtUTXbhiffMvmWKHApTYdpFu",
+   "executedAt": 1694119861,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "5JsBHVF9p9DWhKYiTV59S3gdeSVXodMmrv9TGoiLVuEY",
+   "proposal": "8hVSmpnTC6P6pzoFt7FPvxLauGNkQWmZ3sm98ohYhW4Q",
+   "executedAt": 1696232778
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "FVPHf9QTT5gNjhMb5kkjxQAFpC7LVixAjJ3cSKcaDNC5",
+   "executedAt": 1696590730,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "DmMxgF5PY9jn2ppkoPFxdrs3m3Ue3y9qpg93Pyiko5kA",
+   "proposal": "3vnAtWrAmxTfzqv2vUsfaYYq2g9G3o65ULkZuzLaA3CP",
+   "executedAt": 1697445543
+  },
+  {
+   "address": "DmMxgF5PY9jn2ppkoPFxdrs3m3Ue3y9qpg93Pyiko5kA",
+   "proposal": "2SnbQcorp4azr7tcxdMFjSLBC1fM9j3Zw8kxsGS6dCJ2",
+   "executedAt": 1697445568
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "66ms15amL9sQJuw9bB67WGJJ5rKNJSf5WrEEGinkVJoD",
+   "executedAt": 1698260000,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "GR1LBT4cU89cJWE74CP6BsJTf2kriQ9TX59tbDsfxgSi",
+   "proposal": "Cz83RnnjyN2NTEeuwdar5RUMyDH1sj3LonxBmRyVnZ3N",
+   "executedAt": 1698408893,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "ShomFhbBdi1sxhm7xRko7vYoBVTobeUccEn3x42D6EC",
+   "executedAt": 1699634472,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "7XnjivBD1bX7DF9z2DZZdrGAiTthJGG869qYw1LXDjLE",
+   "executedAt": 1701198651,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "J89Vt9ezcRoNnL2xtTgzMgDGKfGJFFiRhnBUZknGRZ2n",
+   "executedAt": 1701198685,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "BsGzDt4gRYtUbjfVqnrQbnqfNdv5hBwjuSPJ3seCdWpa",
+   "proposal": "mvH2iB3nabLDNC3GcUTVzipncoZzu43KM4ee32XgMRu",
+   "executedAt": 1703021302,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "7A6CrNWAFFBpQTBRo5fULibqqB3MouNLgbVBf8D3MJAx"
+  },
+  {
+   "address": "9QxSERVyiWYxE1u843dFGhohv6Sd1ZEGta9MdJ8xKUNV",
+   "proposal": "MTTRTnZGA6jdy1k787tLx87tsMPpiexnEUJjWQhPWBW",
+   "executedAt": 1703268626
+  },
+  {
+   "address": "H2sA5YvBgsfVLzn8hVYWWDLEKdQAEwXtsWCQPAx8ziwo",
+   "proposal": "MTTRTnZGA6jdy1k787tLx87tsMPpiexnEUJjWQhPWBW",
+   "executedAt": 1703268626
+  },
+  {
+   "address": "9QxSERVyiWYxE1u843dFGhohv6Sd1ZEGta9MdJ8xKUNV",
+   "proposal": "5SvDMndp1dVET2zNAjZhSXrza8JxetGmhKKNVozXt7Ku",
+   "executedAt": 1703958314
+  },
+  {
+   "address": "H2sA5YvBgsfVLzn8hVYWWDLEKdQAEwXtsWCQPAx8ziwo",
+   "proposal": "5SvDMndp1dVET2zNAjZhSXrza8JxetGmhKKNVozXt7Ku",
+   "executedAt": 1703958314
+  },
+  {
+   "address": "AZ6gwfANMvyEhia3aWTAXahmJZwq1P8VN2rRwqNHWNB",
+   "proposal": "CvWduLZQRT99zwMDZMaiuxP8CUovTahnvT3fXpnDJfjn",
+   "executedAt": 1705083368,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "FRVKczrU8ADdZMHeCwMmyCyGpWQdjntErQA74zNpE4RQ"
+  },
+  {
+   "address": "nfFyitP4HsAgFDCkVkDSeF45KXSkr7knu8JwQjGezhR",
+   "proposal": "58U1vQza39wpAADkL84x8Uj9UA9NfpeuszKutjGHt8Vp",
+   "executedAt": 1705084325,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "3VFLyYriTjbpc9sKKgq7a3fWiVgRvSsxAnz1xERqULnv"
+  },
+  {
+   "address": "NzmNkXzzhGaPiM6eEoFZ3ncsngjUVGY1P5s4T5Nga2h",
+   "proposal": "58U1vQza39wpAADkL84x8Uj9UA9NfpeuszKutjGHt8Vp",
+   "executedAt": 1705084325,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "29a73AtfN49GtdLaZM8AsdHUnSu4bAXzN95a5hx7WKk6"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "6SUme3kKLLEsHP21fqJtYVQK2v1QRkR29Lj2vvgXG7B1",
+   "executedAt": 1705179484,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "ErzQSNpgp1Ae3x6DcoeWYCcfSzmidYk6fUCrtySDgrF8",
+   "proposal": "23EcuvwuYvZ4Lbp2RDvnEQDwwXDc2KV27M2Qa5nTvTLj",
+   "executedAt": 1706713101,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "chMavQVSWyZKSGkofRbwdqFkw5DQttMJM5XYXuBUjHK"
+  },
+  {
+   "address": "DmMxgF5PY9jn2ppkoPFxdrs3m3Ue3y9qpg93Pyiko5kA",
+   "proposal": "5N7eFYWXVrfP3Fsta8LTsvN7q3FgtpSQoCyLos645xxV",
+   "executedAt": 1710158028
+  },
+  {
+   "address": "4KVcxVNkmsPz9yWqvcHUQjYZwnSw4aFZyCEHCa4AB8Ee",
+   "proposal": "5paWK1xoPA4Z2vTT4SkmUBZiKRy7SQB4ugqysJPS28vs",
+   "executedAt": 1712095126
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "GeSXVsRajNM8pvsb2FS4ihNEYrR8DG61H9Q5iz2VuBjJ",
+   "executedAt": 1716674523,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "3vcWHvM9HCxToxyMjBFyu6J3KDL9VP3YkMPVdumvnTrD",
+   "executedAt": 1716891132,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "5kurgr3LyseJ3YhB4YFqfRtuW7oqwahVohPhoCVsM9qm",
+   "proposal": "DL4MBARb4XSjWv6PEcUtN2XoLFvDqETYvP8wPRWNqNRQ",
+   "executedAt": 1718291606,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "NCV2Uo3hfW5LSZXAJe19y6SpC5K98PuQwShCSZgTki3"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "DL4MBARb4XSjWv6PEcUtN2XoLFvDqETYvP8wPRWNqNRQ",
+   "executedAt": 1718291609,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "DL4MBARb4XSjWv6PEcUtN2XoLFvDqETYvP8wPRWNqNRQ",
+   "executedAt": 1718291636,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "EetCpVLpRufUjLuYTUpmMQnYe5jjCWy1iF85b2Yhf9Ji",
+   "executedAt": 1719246282,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "CStQr2G8UfkD68psV2Hm8CKuthpEdNAwibcYpPhz8y6q",
+   "executedAt": 1719261667,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "89bDhnqGqvTKxJBNvXemr3ZKk8oZ9vAK453aDkrjTcde",
+   "executedAt": 1719689121,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "89bDhnqGqvTKxJBNvXemr3ZKk8oZ9vAK453aDkrjTcde",
+   "executedAt": 1719689121,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "5kurgr3LyseJ3YhB4YFqfRtuW7oqwahVohPhoCVsM9qm",
+   "proposal": "2SVUFJs38pMQXAteLRvUYQTgJGQawyYRZD4sybygHS41",
+   "executedAt": 1720417176,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "NCV2Uo3hfW5LSZXAJe19y6SpC5K98PuQwShCSZgTki3"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "2SVUFJs38pMQXAteLRvUYQTgJGQawyYRZD4sybygHS41",
+   "executedAt": 1720417177,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "2SVUFJs38pMQXAteLRvUYQTgJGQawyYRZD4sybygHS41",
+   "executedAt": 1720417181,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "69tPBWkDgNW23pg8wpi7UP9pgu5yZ8uXPch1GEbm7MNe",
+   "executedAt": 1721669358,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "69tPBWkDgNW23pg8wpi7UP9pgu5yZ8uXPch1GEbm7MNe",
+   "executedAt": 1721669358,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "APZtQTdqvdrpGuNqiyg4f1VwDkRrJSUVNLFd1VLjxRVH",
+   "executedAt": 1721984899,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "H5vwmyJBSMw8divk4xMnff8p2eyLCW8R1nejPpQ5s7a5",
+   "executedAt": 1721984976,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "C8srGAPvecm1rmbXQxywqyAA6Ds1aT2ib658Nb5Q9iYE",
+   "executedAt": 1722498890,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "C8srGAPvecm1rmbXQxywqyAA6Ds1aT2ib658Nb5Q9iYE",
+   "executedAt": 1722498890,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "95PtGSt2Hmcc2cxyqArqx1m4tTdLwLUK9y38HCHMbNbw",
+   "executedAt": 1723971130,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "95PtGSt2Hmcc2cxyqArqx1m4tTdLwLUK9y38HCHMbNbw",
+   "executedAt": 1723971130,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "DGPfgdanL5yJEr6fD19GJrWNj1VsU2CnpdrpENL2z9dX",
+   "proposal": "2fSm3Km6iAXEJgr5qXJb2kKGqM22Kr6UVrUNvfaRGoxK",
+   "executedAt": 1724169146,
+   "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "DGPfgdanL5yJEr6fD19GJrWNj1VsU2CnpdrpENL2z9dX",
+   "proposal": "2fSm3Km6iAXEJgr5qXJb2kKGqM22Kr6UVrUNvfaRGoxK",
+   "executedAt": 1724169146,
+   "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "3jJvWrEn1agnkbZZLkwWUi1Fu5XQavfqpaBKQnDv6Luu",
+   "executedAt": 1725107998,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "3jJvWrEn1agnkbZZLkwWUi1Fu5XQavfqpaBKQnDv6Luu",
+   "executedAt": 1725107998,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "4jXDgbAAzVhwypY7UWQKPgmgsY7w1tBDpvJSKZ6S1Ltj",
+   "executedAt": 1726324379,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "4jXDgbAAzVhwypY7UWQKPgmgsY7w1tBDpvJSKZ6S1Ltj",
+   "executedAt": 1726324379,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "FApSZ9DkQ4uW3asxEQK4UP6PFqmgw3iBBxmGXWPgjucm",
+   "executedAt": 1727536473,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "FApSZ9DkQ4uW3asxEQK4UP6PFqmgw3iBBxmGXWPgjucm",
+   "executedAt": 1727536473,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "58KQeh1azGHB68retGKgLK9Pef4Hm8exA7y9Pgrv6ES4",
+   "proposal": "Dg59CNHA4i8EVz8tZ5XA4dyfT1dxbsvbGq18MT7HJhBS",
+   "executedAt": 1728460165,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "Gsfh2R4mptnWf3vVbg8svAsMWZVktRcxn32ieWGhbQ9d"
+  },
+  {
+   "address": "58KQeh1azGHB68retGKgLK9Pef4Hm8exA7y9Pgrv6ES4",
+   "proposal": "ALkjU2NeA7f6EpnR9vD1NDdH2AT9xf4sKjh1uMwEyyHc",
+   "executedAt": 1728545429,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "Gsfh2R4mptnWf3vVbg8svAsMWZVktRcxn32ieWGhbQ9d"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "4FbwFZTQhNt3k8FdDBDq3b9aRB1CeSSPFYmJYvC6TByS",
+   "executedAt": 1728798795,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "4FbwFZTQhNt3k8FdDBDq3b9aRB1CeSSPFYmJYvC6TByS",
+   "executedAt": 1728798795,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "BGd2g9LQYaRYtm5Sr7FPSZDJoDpfCvHag6UTy2AqAEib",
+   "executedAt": 1730028348,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "BGd2g9LQYaRYtm5Sr7FPSZDJoDpfCvHag6UTy2AqAEib",
+   "executedAt": 1730028348,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "APFK6SnpBNFTpqsPhEBWH5biXX9rgYgrJA2xRBrtzqJ9",
+   "executedAt": 1731253730,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "APFK6SnpBNFTpqsPhEBWH5biXX9rgYgrJA2xRBrtzqJ9",
+   "executedAt": 1731253730,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "BUeccnV36vfhUrBTBdjQk6nMRdRNh4XTnv8GSyXCvjTb",
+   "executedAt": 1732363519,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "EL2bneNt8o5E7aRyJMRJXJmvW2mjWYxnMR5CGw865ApB",
+   "proposal": "BUeccnV36vfhUrBTBdjQk6nMRdRNh4XTnv8GSyXCvjTb",
+   "executedAt": 1732363519,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HDqg9phPLUueMCT7uV9C8QETX3SrY7AerhZqjQ2k6DgQ"
+  },
+  {
+   "address": "5WNBsRdyZsRo6WnprLVPfmfMXp8m3RFBmtxW3n1CZ7L6",
+   "proposal": "4RL2MMLiyowkHvMxYEwu6HuvgQiNrBXWarsax412M3bZ",
+   "executedAt": 1733227814,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "2ZPpPnHzSmYEEJMHwEwL4U1dBsLomqkjXmzEgaEyPyDU"
+  },
+  {
+   "address": "C84Fc4VXSkUgxEETa6FYi7Rt17aSJsjX2yNG6RgsXFhj",
+   "proposal": "1sVm1KNkv3jUHf9kEC2kSKV4ovAwZ58jwWg7mCvasty",
+   "executedAt": 1733521702,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "F7kL2MiC1uabb8uGhVQTpnXdXUJxNUDp6K7gf5ToNsUZ"
+  },
+  {
+   "address": "C84Fc4VXSkUgxEETa6FYi7Rt17aSJsjX2yNG6RgsXFhj",
+   "proposal": "59rkqx4cYxKqhiYFJpM2yt4vq84mjSn2pauMUnq1KhZZ",
+   "executedAt": 1733650732,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "F7kL2MiC1uabb8uGhVQTpnXdXUJxNUDp6K7gf5ToNsUZ"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "FCByYUZYopr3u9ejwKVUFYbuh366q9fURFiLY5htsrs4",
+   "executedAt": 1733664337,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "FCByYUZYopr3u9ejwKVUFYbuh366q9fURFiLY5htsrs4",
+   "executedAt": 1733664337,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "6DC6DRbC7T93XHtuw5oizdJ7kMRmZf56jZ9muSTu2fdb",
+   "executedAt": 1733820870,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "8c41fDHiF2B3KdDnPnPLqNtMdcXj6t962MYiWWUQraHZ",
+   "proposal": "GSApSW41VAm6gR9Ck9bGCj4iRLgscnpLSGnds5ptVf9F",
+   "executedAt": 1734350924,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5W6mFo4H2ro95LpRF5yRRF26YaX3KSWoDph7qsw8kwSR"
+  },
+  {
+   "address": "8c41fDHiF2B3KdDnPnPLqNtMdcXj6t962MYiWWUQraHZ",
+   "proposal": "DxA6un5HogtV79uWmiNPwhgRwB4gDQS4N2R9a1UEE1jY",
+   "executedAt": 1734351572,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5W6mFo4H2ro95LpRF5yRRF26YaX3KSWoDph7qsw8kwSR"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "8E9ZNjrNpFivp5Pm1gm1UTDaYHcWfhW57fSUPeBeyFE3",
+   "executedAt": 1734884636,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "8E9ZNjrNpFivp5Pm1gm1UTDaYHcWfhW57fSUPeBeyFE3",
+   "executedAt": 1734884636,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "CFhvGjG5upxjeLVr4dN7VXR21pCDoqY87nqaWPUQHvVq",
+   "executedAt": 1736261705,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "CFhvGjG5upxjeLVr4dN7VXR21pCDoqY87nqaWPUQHvVq",
+   "executedAt": 1736261705,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "2AwhStUBTzfqUZE2kEpay65z8Bk4igDLmAbCufXgCJfZ",
+   "executedAt": 1737407295,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "2AwhStUBTzfqUZE2kEpay65z8Bk4igDLmAbCufXgCJfZ",
+   "executedAt": 1737407295,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "5bzypkwtokDoB9WjpLCnfpWLEWfjvtNeCHT7DKhXTwdc",
+   "executedAt": 1738349085,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "5bzypkwtokDoB9WjpLCnfpWLEWfjvtNeCHT7DKhXTwdc",
+   "executedAt": 1738349085,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "DGPfgdanL5yJEr6fD19GJrWNj1VsU2CnpdrpENL2z9dX",
+   "proposal": "J7REPuQwYmWYYjbMaiobpMtbrBHQ7F7sKg3g5rvJw8MD",
+   "executedAt": 1738795427,
+   "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "2ZUPFu3dBwhp8mcL6FC4YMcFRG2CUbiA4J4GNHJ2nEKQ",
+   "executedAt": 1738845685,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "Dj48aUhQWNBoZtQb5iuUYLtZA7UZmKcQEQd5HyWpkiN9",
+   "executedAt": 1739578369,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "AaLBrvLCCjN832ySn4FsN72vvFHyWvccf656u7qgCZ4c",
+   "executedAt": 1739578538,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "CCqm2SPqdQaRjsWo9LHqiEiU5HezhAr4dzwE1DG5C8ab",
+   "proposal": "ENEbP3m6QX6LxTzjiD5Je2TrMZzcs26n8Xg8DzhHeT5V",
+   "executedAt": 1743408663,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "GvXGNmHHdeop2VQtSt7K5MSWxbNNz3JUJ8eMwEzTTJME"
+  },
+  {
+   "address": "Ag5FGShfT4dB28Cq1dzdoviNQ3VNGntk5tfn7BWNVMJr",
+   "proposal": "CKSjs1HYMPNi5TRgN6EGz1Zp3mb9ecVJYocPsfoE4LAN",
+   "executedAt": 1743426569,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "42AQ7jVTXbjC2o68cKNfYp2wjnYdUvXiyKCrGTmp1CwG"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "79Tfw9NFqdpU1YgJk3cpbfukphRfMXC75bmepVGaGJcP",
+   "executedAt": 1744029173,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "EL6AdmRM11Yf5Np8Kq4KsT7dAJegwjsUBw8BwSoYFByj",
+   "executedAt": 1744029215,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "GR1LBT4cU89cJWE74CP6BsJTf2kriQ9TX59tbDsfxgSi",
+   "proposal": "4hzLYp7jsmRjNmYXavzLUSn5gvmgTshjV9dLEx9FPS2m",
+   "executedAt": 1744029277,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  },
+  {
+   "address": "GR1LBT4cU89cJWE74CP6BsJTf2kriQ9TX59tbDsfxgSi",
+   "proposal": "BqdtuCKudSWa6AjNmPfDJrrXaQNWuCjE8rqsdwqjpAe4",
+   "executedAt": 1744029313,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  },
+  {
+   "address": "6gSYFwgcS4rEaLRSWuqJChuAy6Lq5qXdyQ2qGAWjspXR",
+   "proposal": "GkAaMs24pRfk6mriG1LJajx7vVSPN3TENiRLPsokQZJU",
+   "executedAt": 1744029429,
+   "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh",
+   "proposal": "E7HKLcSe86pFf4jC3nZVEwzLhKGYMLXwo8N5YTcVBk1B",
+   "executedAt": 1745789383,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "E7HKLcSe86pFf4jC3nZVEwzLhKGYMLXwo8N5YTcVBk1B",
+   "executedAt": 1745789383,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "J13YPM2NQkrqCCrkg6WgQ4978Ln7YYusALAYb3B4bmx9",
+   "executedAt": 1753438426,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92",
+   "proposal": "8eLDfFQJSuoaHYEGb5PArscozSofm3CFEsAjvcuzQ3Nm",
+   "executedAt": 1754137263,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "EXf6gTFRDoYsg5ZbUjrHb7qe9ZnfNo6Yxnepoi24ehmv",
+   "executedAt": 1756149746,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u",
+   "proposal": "2iZTjrFy7MNtmFYc7hYUEbekfiRiK9iCCNBCem6hm9Yy",
+   "executedAt": 1756150108,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "AkycjWgkZ9WsiM26JsTmv7Fj9P8id3uvCpm3rb8FSWq2",
+   "proposal": "EpmG66TYFhSs9hBktoydK4w3L79i8oYVEUd28hPXLpoM",
+   "executedAt": 1765132804,
+   "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+   "owner": "BDQa7n9v85ngnZZ3gL5cprMDpiPdeZvsrfb9SFhPRafa"
+  },
+  {
+   "address": "5FFQXgku68vn6pGEBFx48kaPbvdg8ctTtaQLSuRpV6um",
+   "proposal": "EV4tQezLJ442bSX25beUF16MExZEfnFUP7oJcMZzQxmq",
+   "executedAt": 1765134356,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "BDQa7n9v85ngnZZ3gL5cprMDpiPdeZvsrfb9SFhPRafa"
+  },
+  {
+   "address": "95xFaj4cHnADFg2GJQjqCy34wMbdaX9fqnPSpvgqkLqE",
+   "proposal": "Avfo4opueUWPxZUUVWuiuXaf8qL6vX6iP5Kqq2i1ThM2",
+   "executedAt": 1767999659,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5kk89ePYJoXfebzVJ1a29her5oPhm97RE98EZhN92T9k"
+  },
+  {
+   "address": "FJCiDdicksG1gnHeG7Gg7RP2m1fbb8cZSRqk6ZahVJ3T",
+   "proposal": "A3KUu6EyxhnKz2hB9HjPFUrGq799LzdRmzJ3J5ojyLnR",
+   "executedAt": 1769514749,
+   "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "6jbGQiaXyuYUuwoBHgWPKS8ySFTL1EA2CySMddbX6gLt",
+   "proposal": "9hcoNiakKwmWWDapN3p4dMKknVivcthPekdAMdTBf8PZ",
+   "executedAt": 1770230628,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "FJCiDdicksG1gnHeG7Gg7RP2m1fbb8cZSRqk6ZahVJ3T",
+   "proposal": "BcmsguyRHNmTQA3mft7zSTA5ZP8X1JsDq5E1CqYGUsWV",
+   "executedAt": 1770484295,
+   "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs"
+  },
+  {
+   "address": "FNkL1dnfsSj69Lx17AqUmPiME9BsZKimqBgFjRnNWf7C",
+   "proposal": "E2dVBfBjijQHqBwRSegJFz4tW2neRSEMoVRUzH5iTxcE",
+   "executedAt": 1770573852
+  },
+  {
+   "address": "HnB5m29yxtigd2uvHod7m7swZUMTSUDmMYpxMoquiwmA",
+   "proposal": "E2dVBfBjijQHqBwRSegJFz4tW2neRSEMoVRUzH5iTxcE",
+   "executedAt": 1770573852
+  },
+  {
+   "address": "B1aLzaNMeFVAyQ6f3XbbUyKcH2YPHu2fqiEagmiF23VR",
+   "proposal": "GmfQWScCHqV8sEyAQFvzQf8caPwRqmSiX4hU366nEN5n",
+   "executedAt": 1770743103,
+   "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "G5AxzZuXx2y4HMCuzc6vNe3qfFPPQJRPQ72TEX1meY2v",
+   "proposal": "Ci7sasocCbY2qMgwjUVuSAoTgzUe2g2BiEYJmVSi1haQ",
+   "executedAt": 1770743163,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  },
+  {
+   "address": "2DYiL6M9TKRC1sTb2rzcrh8SAUum1AM4apkMQUAzUE5Z",
+   "proposal": "Bja4P4ZrxaMQq7Mrm5GnoqHvp2td4Vrd74u57RGUt2jd",
+   "executedAt": 1770749153,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "HnTy3nNcT2UnJWroDi33erQGd9jw9QCGz2WD4tjgzaof"
+  },
+  {
+   "address": "B1aLzaNMeFVAyQ6f3XbbUyKcH2YPHu2fqiEagmiF23VR",
+   "proposal": "AGNxAuUa2gQcnZqmSL49G6krAumjxC8pTTnCDg3mzVre",
+   "executedAt": 1772741735,
+   "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+   "owner": "89SrbjbuNyqSqAALKBsKBqMSh463eLvzS4iVWCeArBgB"
+  },
+  {
+   "address": "G5AxzZuXx2y4HMCuzc6vNe3qfFPPQJRPQ72TEX1meY2v",
+   "proposal": "HLxPHZYHvo3TP4uhpTCJcCtkAfAEPRPS5JQoJWU9Pf22",
+   "executedAt": 1772741796,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  },
+  {
+   "address": "4Dh5CQY7fwxvobeZmZ2bJs1LR9fqyiqjht45fFxHMu7a",
+   "proposal": "4QGK3npmyLUnCAk9BiZixLSC4LCtrcisW54VGY9mxRuq",
+   "executedAt": 1773317247,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "9JAjGL6rUWADkvtVkJ2UGKpNtHufeaMSXSHR48Wggc6f"
+  },
+  {
+   "address": "4Dh5CQY7fwxvobeZmZ2bJs1LR9fqyiqjht45fFxHMu7a",
+   "proposal": "57DBqo2GjKp9MvaBJWoHr8HWZCgdYa99JhRtZ8YusP1H",
+   "executedAt": 1773579029,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "9JAjGL6rUWADkvtVkJ2UGKpNtHufeaMSXSHR48Wggc6f"
+  },
+  {
+   "address": "G5AxzZuXx2y4HMCuzc6vNe3qfFPPQJRPQ72TEX1meY2v",
+   "proposal": "GJuekED95JMbwYh4Np8csdHFRBRD3EH9aFNuSBoHVLMy",
+   "executedAt": 1773579087,
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "B56RWQGf9RFw7t8gxPzrRvk5VRmB5DoF94aLoJ25YtvG"
+  }
+ ],
+ "programs": {
+  "dstK1PDHNoKN9MdmftRzsEbXP5T1FTBiQBm1Ee3meVd": {
+   "programData": "21FqdeN53A76Vci5KLYzwHhnSJhN53a99zy7MnbztsCu",
+   "upgradeAuthority": "2aQP7NGhktKR92EsHKSoRzcw5FfcZ8oBWgyoGdB3ouww",
+   "governedBy": "2aQP7NGhktKR92EsHKSoRzcw5FfcZ8oBWgyoGdB3ouww"
+  },
+  "VoteMBhDCqGLRgYpp9o7DGyq81KNmwjXQRAHStjtJsS": {
+   "programData": "C6k3BuxsDjihWAP5mVxCLWxEVMAgvifUS95u78ym2xiT",
+   "upgradeAuthority": "2w6ny74cU6yRxkD6ZACh5M1JznLQ1KB6AUsB7zo2NBHX",
+   "governedBy": "2w6ny74cU6yRxkD6ZACh5M1JznLQ1KB6AUsB7zo2NBHX",
+   "name": "Marinade Voter Stake Registry (VSR)"
+  },
+  "LigadctxNRkZied3WuhX525vUhDkuhXNK5DyeijeDnh": {
+   "programData": "A6hrn2Fzbgeq3NecoLzvS15RxF9qFVWfKrYddEBUxtbB",
+   "upgradeAuthority": "3cBS14yanCZPRKgdCLnmxHWXFfGjW8bid5zxj7UPqWW5",
+   "governedBy": "3cBS14yanCZPRKgdCLnmxHWXFfGjW8bid5zxj7UPqWW5"
+  },
+  "GovMaiHfpVPw8BAM1mbdzgmSZYDw2tdP32J2fapoQoYs": {
+   "programData": "7NQWvN95nAejfjXuiLpBGK93XVtVfo6E7ucuWddLhQZ6",
+   "upgradeAuthority": "6egAu2HDLcSgeUYmiBvNLgp7Bd4nPk16gX9MvWuJpeX2",
+   "governedBy": "6egAu2HDLcSgeUYmiBvNLgp7Bd4nPk16gX9MvWuJpeX2",
+   "name": "Marinade Governance (spl-governance)"
+  },
+  "MR2LqxoSbw831bNy68utpu5n4YqBH3AzDmddkgk9LQv": {
+   "programData": "FM24DfAnUittoNAuZi6cmsCscxYwbngLEVJApSnZnfuk",
+   "upgradeAuthority": "6XQFdWeogb5C8c1KsSCkK6rzzxLxzxsPQqoXge9oJ9xR",
+   "governedBy": "6XQFdWeogb5C8c1KsSCkK6rzzxLxzxsPQqoXge9oJ9xR"
+  },
+  "tovt1VkTE2T4caWoeFP6a2xSFoew5mNpd7FWidyyMuk": {
+   "programData": "Aer3uTw5dz4hkVjPzQewx39kZckSRP5dsyZ9EHSzLR8J",
+   "upgradeAuthority": "AEej7Lywu8EzMznXnxhb1493yCVnmLNXaCKYfUNvQQaJ",
+   "governedBy": "AEej7Lywu8EzMznXnxhb1493yCVnmLNXaCKYfUNvQQaJ"
+  },
+  "va12L6Z9fa5aGJ7gxtJuQZ928nySAk5UetjcGPve3Nu": {
+   "programData": "3iC1UNoSbHHUfhHUQbdV5mxg2H99qGCJk5ooQPsDsvfG",
+   "upgradeAuthority": "CLydpgqZty5HQq1uMtbXpH1vtmN7erhdBSPbn12NGLmb",
+   "governedBy": "CLydpgqZty5HQq1uMtbXpH1vtmN7erhdBSPbn12NGLmb"
+  },
+  "tokdh9ZbWPxkFzqsKqeAwLDk6J6a8NBZtQanVuuENxa": {
+   "programData": "FxcCWQUMRnuz29AYtv1DyWXrJDffFjJdZUZ2eoMXr6bV",
+   "upgradeAuthority": "CWRgRr4udD66JbVtS9u2Gu7LHBi5m6SM3ytvmWobThEQ",
+   "governedBy": "CWRgRr4udD66JbVtS9u2Gu7LHBi5m6SM3ytvmWobThEQ"
+  },
+  "mRefx8ypXNxE59NhoBqwqb3vTvjgf8MYECp4kgJWiDY": {
+   "programData": "jyo5zpUKNwKimrdnvMfFaewuRWe2DMH5prASzSbt5rz",
+   "upgradeAuthority": "G6yWqM2RVjhepkVEayeNVqgKNtpMuwtgqDY3s2N3uzas",
+   "governedBy": "G6yWqM2RVjhepkVEayeNVqgKNtpMuwtgqDY3s2N3uzas"
+  },
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": {
+   "programData": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+   "upgradeAuthority": null,
+   "name": "SPL Token Program"
+  }
+ },
+ "buffers": {},
+ "accounts": {
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": {
+   "kind": "program",
+   "programOwner": "BPFLoaderUpgradeab1e11111111111111111111111",
+   "lamports": "200653906"
+  },
+  "H988v6sNu4dw911AeUo6fy5RsTkDtyfcTAMNpdq1Mo6u": {
+   "kind": "token",
+   "programOwner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+   "lamports": "2040280",
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs",
+   "amount": "117197586954697290",
+   "decimals": 9
+  },
+  "Bo4D3duu5dneDUogpKss5qSH8wgDG6KzZ8YZHX5zYS92": {
+   "kind": "token",
+   "programOwner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+   "lamports": "2040280",
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "AU4GkzA4G9rRX3hS8QCNTiVGAtt5MNUAfK5L5Q57BAC4",
+   "amount": "2520000000000",
+   "decimals": 9
+  },
+  "J5BEceL5z1EQ7JBqEFu4BfPN4PYCeQaW3GXrzXFfCzhs": {
+   "kind": "wallet",
+   "programOwner": "11111111111111111111111111111111",
+   "lamports": "12943399"
+  },
+  "9PiXBroiPEreay3QQPAV9DXGjvBAK6eo2kZzux4qQ6Sh": {
+   "kind": "token",
+   "programOwner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+   "lamports": "2039280",
+   "mint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+   "owner": "5QbRL9MU5QakL5Fx2He9YaiUzB3TQpVAUBR2ARKN1NrM",
+   "amount": "0",
+   "decimals": 9
+  }
+ }
+}
