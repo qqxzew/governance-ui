@@ -216,3 +216,30 @@ Proxy flags: `--mode live|record|replay`, `--snapshot <file>`, `--port 8898`,
 - **"cannot listen on 8898"**: another proxy is already running. Find it with `Get-NetTCPConnection -LocalPort 8898` (bash: `lsof -i :8898`), or use `--port`.
 - **Empty pages on live mainnet**: the public RPC rate-limits heavy `getProgramAccounts` calls. Use a provider key through `UPSTREAM`.
 - **Offline page shows errors**: run `Invoke-RestMethod http://localhost:8898/misses` and re-record that page.
+
+## 7. Public deployment (Vercel) — live mainnet, read-only
+
+The browser talks to `/api/rpc` on the same domain; the server route (`pages/api/rpc.api.ts`)
+forwards to the real RPC. The API key lives only in the server-side env var `RPC_UPSTREAM`,
+transaction sending is refused, and large responses are gzip-compressed (Marinade's biggest
+`getProgramAccounts` is 11 MB raw, 1.3 MB gzipped; Vercel's limit is 4.5 MB).
+
+Vercel project → Settings → Environment Variables:
+
+| Name | Value |
+|---|---|
+| `RPC_UPSTREAM` | `https://mainnet.helius-rpc.com/?api-key=<your key>` (server-only, never `NEXT_PUBLIC_`) |
+| `NEXT_PUBLIC_MAINNET_RPC` | `/api/rpc` |
+| `NEXT_PUBLIC_HELIUS_MAINNET_RPC` | `/api/rpc` |
+| `NEXT_PUBLIC_READ_ONLY_MAINNET` | `true` |
+| `REALM` | `MNDE` (home page opens Marinade; any realm still works at `/dao/<realm pubkey>`) |
+| `NODE_OPTIONS` | `--max-old-space-size=6144` |
+
+Install/build commands come from `vercel.json`. Node 22 is picked from `package.json` engines.
+
+The Telegram bot is a long-running process and does not run on Vercel. Run it on any machine
+(or a small VM) with `APP_URL` set to the deployed URL so alerts link to the public site:
+
+```powershell
+$env:APP_URL = "https://<your-app>.vercel.app"; npm run bot
+```

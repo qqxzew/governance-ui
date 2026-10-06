@@ -1,8 +1,10 @@
 {
+  "installCommand": "yarn install --frozen-lockfile --ignore-engines --ignore-scripts",
+  "buildCommand": "yarn build",
   "functions": {
     "pages/api/*.api.ts": {
-      "memory": 3009,
-      "maxDuration": 90
+      "memory": 1024,
+      "maxDuration": 60
     }
   }
 }
