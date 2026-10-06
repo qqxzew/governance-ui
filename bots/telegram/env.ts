@@ -70,7 +70,7 @@ export function readConfig(): BotConfig {
       throw new Error('TELEGRAM_ALLOWED_CHATS must be comma-separated chat ids')
     }
   }
-  const appUrl = (process.env.APP_URL || 'http://localhost:3000').replace(
+  const appUrl = (process.env.APP_URL || 'http://localhost:3100').replace(
     /\/+$/,
     '',
   )

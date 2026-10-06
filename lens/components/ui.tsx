@@ -209,12 +209,25 @@ export function RealmHeader({
         </div>
       </div>
       <nav className="tabs">
-        <Link href={`/dao/${encodeURIComponent(slug)}`}>
-          <a className={tab === 'proposals' ? 'on' : ''}>Proposals{count !== undefined ? ` ${count}` : ''}</a>
-        </Link>
-        <Link href={`/dao/${encodeURIComponent(slug)}/power`}>
-          <a className={tab === 'power' ? 'on' : ''}>Voting power</a>
-        </Link>
+        {slug ? (
+          <>
+            <Link href={`/dao/${encodeURIComponent(slug)}`}>
+              <a className={tab === 'proposals' ? 'on' : ''}>Proposals{count !== undefined ? ` ${count}` : ''}</a>
+            </Link>
+            <Link href={`/dao/${encodeURIComponent(slug)}/power`}>
+              <a className={tab === 'power' ? 'on' : ''}>Voting power</a>
+            </Link>
+          </>
+        ) : (
+          <>
+            <a className={tab === 'proposals' ? 'on' : ''} aria-disabled="true">
+              Proposals
+            </a>
+            <a className={tab === 'power' ? 'on' : ''} aria-disabled="true">
+              Voting power
+            </a>
+          </>
+        )}
       </nav>
     </section>
   )

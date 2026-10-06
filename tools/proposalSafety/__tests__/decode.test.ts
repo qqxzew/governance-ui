@@ -18,7 +18,7 @@ import {
   withSetRealmConfig,
 } from '@solana/spl-governance'
 import { BN, BorshInstructionCoder } from '@coral-xyz/anchor'
-import { IDL as VSR_IDL } from '../../../VoteStakeRegistry/sdk/voter_stake_registry'
+import { IDL as VSR_IDL } from '../../vsr/idl/voter_stake_registry'
 import { createSetUpgradeAuthority } from '../../sdk/bpfUpgradeableLoader/createSetUpgradeAuthority'
 import { createCloseBuffer } from '../../sdk/bpfUpgradeableLoader/createCloseBuffer'
 import { decodeInstruction, Decoded } from '../decode'

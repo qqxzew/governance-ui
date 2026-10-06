@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 200" width="760" height="200" role="img" aria-label="Open Realms">
+  <defs>
+    <linearGradient id="g" x1="48" y1="36" x2="208" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5cf2c4"/>
+      <stop offset="1" stop-color="#1fb88f"/>
+    </linearGradient>
+  </defs>
+  <rect width="760" height="200" fill="#0a0b0d"/>
+  <g transform="translate(24 20) scale(0.625)">
+    <path d="M128 38 L204 66 V124 C204 170 167 203 128 220 C89 203 52 170 52 124 V66 Z"
+          fill="#2dd4a7" fill-opacity="0.08" stroke="url(#g)" stroke-width="12" stroke-linejoin="round"/>
+    <circle cx="122" cy="116" r="34" fill="#0a0b0d" stroke="url(#g)" stroke-width="10"/>
+    <path d="M146 140 L172 166" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M107 117 L118 128 L139 105" fill="none" stroke="#5cf2c4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="196" y="108" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="68" font-weight="700" letter-spacing="-1.5" fill="#f3f5f7">Open <tspan fill="#2dd4a7">Realms</tspan></text>
+  <text x="199" y="148" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="500" letter-spacing="0.5" fill="#8b949e">Know what you vote for</text>
+</svg>

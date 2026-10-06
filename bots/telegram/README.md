@@ -47,9 +47,9 @@ Other settings (all optional):
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `BOT_RPC_URL` | `https://api.mainnet-beta.solana.com` | Solana RPC. Public RPC rate-limits (HTTP 429, retried with backoff); a Helius URL or `http://localhost:8898` (`scripts/rpc-proxy.js`) is smoother. Only scheme+host are ever logged. |
+| `BOT_RPC_URL` | `https://api.mainnet-beta.solana.com` | Solana RPC. Public RPC rate-limits (HTTP 429, retried with backoff); a Helius URL is smoother. Only scheme+host are ever logged. |
 | `BOT_POLL_SECONDS` | `60` | Poll interval (min 10). Only realms with ≥1 subscriber are polled. |
-| `APP_URL` | `http://localhost:3000` | Base URL used in alert links. |
+| `APP_URL` | `http://localhost:3100` | Base URL used in alert links. |
 | `TELEGRAM_ALLOWED_CHATS` | *(empty = anyone)* | Comma-separated chat ids allowed to use commands. Recommended for a private deployment; ignored chats are logged with their id so you can add them. |
 | `BOT_MAX_REALMS` | `50` | Global cap on watched realms (protects the RPC). |
 | `BOT_MAX_WATCHES_PER_CHAT` | `10` | Per-chat cap. |
@@ -58,27 +58,26 @@ Other settings (all optional):
 
 ## 3. Run (PowerShell)
 
-From the repo root (`yarn install --frozen-lockfile --ignore-engines --ignore-scripts` done once):
+From the repo root (`npm install` done once):
 
 ```powershell
 # Test without Telegram and without a token: poll Marinade once and print the alerts
 # the bot WOULD send (the 5 newest proposals are treated as unseen; state.json untouched).
-yarn bot --dry-run --realm MNDE
-yarn bot --dry-run --realm 899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo --last 3
-yarn bot --dry-run --realm MNDE --last 0 --forget 7pYWFt7aigkEU86nbxKM182t6xgVBz9ZaJ1gFzaYN1Zj
+npm run bot -- --dry-run --realm MNDE
+npm run bot -- --dry-run --realm 899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo --last 3
+npm run bot -- --dry-run --realm MNDE --last 0 --forget 7pYWFt7aigkEU86nbxKM182t6xgVBz9ZaJ1gFzaYN1Zj
 
-# Faster/without 429s: through the local RPC proxy (second terminal: yarn rpc:live)
-$env:BOT_RPC_URL = "http://localhost:8898"; yarn bot --dry-run --realm MNDE
+# Faster/without 429s: use your own RPC (e.g. Helius)
+$env:BOT_RPC_URL = Read-Host "RPC URL"; npm run bot -- --dry-run --realm MNDE
 
 # Run the bot (Ctrl+C to stop; state is saved)
 $env:TELEGRAM_BOT_TOKEN = Read-Host "Telegram bot token"
-yarn bot
+npm run bot
 
 # One polling round for all watched realms (sends alerts), then exit — e.g. for Task Scheduler
-yarn bot --once
+npm run bot -- --once
 ```
 
-With npm instead of yarn: `npm run bot -- --dry-run --realm MNDE`.
 
 Then in Telegram, message your bot:
 

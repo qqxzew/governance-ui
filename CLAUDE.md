@@ -1,7 +1,9 @@
 # CLAUDE.md — Open governance UI (revived fork of Mythic-Project/governance-ui)
 
 Goal: voter-facing governance UI for SPL Governance, first-class support for Marinade DAO.
-Status: **Phase 1 built; demo-ready (see HANDOFF.md for open items).** Unaudited, evaluation-grade.
+Status: **Open Realms `lens/` (read-only site) + safety engine + VSR math + Telegram bot; demo-ready (see HANDOFF.md).** Unaudited, evaluation-grade.
+
+> **2026-10-06 update:** the upstream Next app (components/, pages/, hooks/ ...) was removed from this repo; the product is now `lens/` + `tools/` + `bots/`. The "Repo facts" and "Phase 1 architecture" sections below describe the old fork and are kept as history of how the engine was built (paths like `components/instructions/...`, `scripts/rpc-proxy.js`, `yarn demo:*` no longer exist).
 
 ## Safety rules (hard)
 - Never custody funds; only build transactions the user signs. Simulate before signing.
@@ -13,8 +15,8 @@ Status: **Phase 1 built; demo-ready (see HANDOFF.md for open items).** Unaudited
 
 ## Repo facts (verified 2026-10-05)
 - Upstream: https://github.com/Mythic-Project/governance-ui, HEAD 531440354a44 "mango banner (#243)", 2026-01-30, 2801 commits.
-- LICENSE file = Apache 2.0, but package.json says `"license": "MIT"` (mismatch — fix in fork).
-- package.json engines: node 18.19.0, yarn 1.22.19 (.nvmrc = lts/iron). We run Node 22.23.2 / npm 10.9.8.
+- LICENSE = Apache 2.0 and package.json now says Apache-2.0 too (fixed).
+- package.json engines: node >=18.19 <23. We run Node 22.23.2 / npm 10.9.8 (npm, not yarn; `package-lock.json`).
 - Existing code map:
   - Instruction decoders: `components/instructions/programs/*.tsx` (bpfUpgradeableLoader, splToken, voteStakeRegistry, governance, ...); names in `programs/names.ts`; address labels in `components/instructions/tools.tsx`.
   - Warnings: `pages/dao/[symbol]/proposal/[pk]/ProposalWarnings.tsx`. Rules today: SetGovernanceConfig (data[0]==19, yellow), SetRealmConfig (data[0]==22 or writable realm-config acct, yellow), third-party program writing realm config (red), possible wrong governance (yellow), BPF loader any instruction -> "programUpgrade" (yellow, generic), buffer authority != treasury/governance (red), Mango forwarder (yellow). NO treasury-outflow rule, NO voter-weight-addin rule, NO description-vs-actions check.
@@ -86,3 +88,11 @@ Dev: Node 22, `yarn install --frozen-lockfile --ignore-engines --ignore-scripts`
 - Perf trap: `getLockTokensVotingPowerPerWallet` for "undecided" voters simulates one tx per member (Marinade ~18k); capped at 300 in hooks/useVoteRecords.ts.
 - Demo scripts set NEXT_PUBLIC_HELIUS_MAINNET_RPC to the proxy so the Helius key is never inlined into the client bundle (NEXT_PUBLIC_* are build-time).
 - Design: fork palette (slate + mint #3EE6B0), CSS background, shield logo + "Know what you vote for", framed Safety check panel.
+
+## Current layout and verified state (2026-10-06, evening)
+- `lens/` — Next 12 read-only site (port 3100). API: `/api/realm|proposal|verdicts|power|meta|warm|asset`. Analysis runs on the server and is cached (`lens/.cache`, gitignored). `LENS_OFFLINE=1` / `npm run offline` serves only `lens/demo-data` (committed, **Marinade only**).
+- `tools/proposalSafety`, `tools/vsr` — engine and VSR math. `bots/telegram` — bot (`npm run bot -- --dry-run --realm MNDE`).
+- Cache keys are versioned in code (`analysis2|` in `lens/lib/server/safety.ts`). If the version is bumped, `lens/demo-data` must be regenerated (live run + `npm run snapshot`, then keep only Marinade entries) or offline mode returns 404 for proposals. Done for `analysis2`.
+- **Dependency pin:** `package.json` `overrides` pins `rpc-websockets` to 7.11.0. 7.11.2 renamed `dist/lib/client.js` to `.cjs`, which breaks `require('@solana/web3.js')` (web3.js 1.78.8) in plain Node/jest. Remove the pin only after upgrading web3.js.
+- Checks: `npx jest` 10 suites / 132 tests pass; `tsc -p lens/tsconfig.json` and `-p bots/telegram/tsconfig.json` clean; `npm run build` OK; offline mode serves MIP-23 (red: voter-weight plugin replacement, no hold-up, description mismatch), MIP-24 (red: 4x treasury outflow, no hold-up, description mismatch) and benign CrbL (yellow only); bot dry-run emits the red alert.
+- Do not put the findings of other DAOs (Bonk, Mango ...) in committed files.

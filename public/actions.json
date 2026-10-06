@@ -1,8 +1,0 @@
-{
-  "rules": [
-    {
-      "pathPattern": "/dao/**",
-      "apiPath": "https://realms.dial.to/vote/dao/**"
-    }
-  ]
-}

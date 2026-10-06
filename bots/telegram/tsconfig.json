@@ -14,7 +14,6 @@
   "exclude": ["./data/**"],
   "ts-node": {
     "transpileOnly": true,
-    "require": ["tsconfig-paths/register"],
     "compilerOptions": {
       "module": "commonjs"
     }

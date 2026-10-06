@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="512" height="512" role="img" aria-label="Open Realms">
+  <defs>
+    <linearGradient id="g" x1="48" y1="36" x2="208" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5cf2c4"/>
+      <stop offset="1" stop-color="#1fb88f"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="50%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#14181d"/>
+      <stop offset="1" stop-color="#0a0b0d"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- shield -->
+  <path d="M128 38 L204 66 V124 C204 170 167 203 128 220 C89 203 52 170 52 124 V66 Z"
+        fill="#2dd4a7" fill-opacity="0.08" stroke="url(#g)" stroke-width="12" stroke-linejoin="round"/>
+  <!-- lens -->
+  <circle cx="122" cy="116" r="34" fill="#0a0b0d" stroke="url(#g)" stroke-width="10"/>
+  <path d="M146 140 L172 166" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+  <!-- check: what you vote for, verified -->
+  <path d="M107 117 L118 128 L139 105" fill="none" stroke="#5cf2c4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

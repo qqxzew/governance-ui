@@ -7,6 +7,7 @@ const { spawn } = require('child_process')
 const path = require('path')
 const http = require('http')
 
+if (process.argv.includes('--offline')) process.env.LENS_OFFLINE = '1'
 const root = path.join(__dirname, '..', '..')
 const port = process.env.PORT || '3100'
 const nextBin = require.resolve('next/dist/bin/next', { paths: [root] })
