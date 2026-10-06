@@ -5,7 +5,13 @@
 module.exports = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { externalDir: true },
+  experimental: {
+    externalDir: true,
+    // trace ../tools, ../bots and the root node_modules into the standalone bundle
+    outputFileTracingRoot: require('path').join(__dirname, '..'),
+  },
+  // Self-contained server bundle for small hosts (NEXT_STANDALONE=1 next build lens)
+  ...(process.env.NEXT_STANDALONE ? { output: 'standalone' } : {}),
   // Types are checked by the root `tsc` (it includes lens/); keep builds fast.
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },

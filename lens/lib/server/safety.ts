@@ -18,7 +18,7 @@ export function getRealmContext(realmPk: string, programId: string): Promise<Rea
     30 * 60_000,
     () =>
       loadRealmSafetyContext(getConnection(), new PublicKey(programId), new PublicKey(realmPk), {
-        concurrency: 6,
+        concurrency: 3,
         knownPayeesTimeoutMs: 20_000,
       }),
     { staleWhileRevalidate: true },
@@ -57,7 +57,7 @@ async function mintDecimals(mint: string, ctx: RealmSafetyContext): Promise<numb
 /** Full analysis of one proposal. Finished proposals are cached forever, live ones for 90 s. */
 export function getProposalAnalysis(pk: string): Promise<ProposalAnalysis> {
   return cached<ProposalAnalysis>(
-    `analysis|${pk}`,
+    `analysis2|${pk}`,
     (v) => (FINAL_STATES.has(v.meta.state) ? Infinity : 90_000),
     async () => {
       const conn = getConnection()

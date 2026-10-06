@@ -326,8 +326,13 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
     const mintKey = p.mint ?? '?'
     let total = ctx.holdingsByMint.get(mintKey)
     if (total !== undefined) total += execMintOutflow.get(mintKey) ?? ZERO
-    const pctAcct = bal !== undefined ? percent(p.raw, bal) : null
-    const pctTotal = total !== undefined ? percent(p.raw, total) : null
+    // A share above 100% means today's balance no longer reflects the balance at proposal time
+    // (later transfers, earlier executions): report the share as unknown instead of a bogus number.
+    const sane = (x: number | null) => (x !== null && x <= 100.05 ? x : null)
+    const rawAcct = bal !== undefined ? percent(p.raw, bal) : null
+    const balanceChanged = bal !== undefined && bal > ZERO && p.raw > bal
+    const pctAcct = sane(rawAcct)
+    const pctTotal = sane(total !== undefined ? percent(p.raw, total) : null)
     if (pctAcct !== null) detail('Share of source account', fmtPct(pctAcct))
     if (pctTotal !== null) detail(`Share of all DAO ${sym}`, fmtPct(pctTotal))
 
@@ -340,6 +345,8 @@ function analyzeInstruction(ctx: Ctx, ix: InstructionInput, d: Decoded, opts: Re
       pctAcct !== null
         ? `that is ${fmtPct(pctAcct)} of that treasury account` +
           (pctTotal !== null ? ` and ${fmtPct(pctTotal)} of all ${sym} held by this DAO` : '')
+        : balanceChanged
+        ? `more than that account holds today (its balance has changed since this proposal was created)`
         : `the balance of the source account is unknown`
     const knownText = pv.text
     action.summary = `${p.verb} ${amt} ${sym} from ${ctx.label(p.source)} to ${destText}.`

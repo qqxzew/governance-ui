@@ -69,7 +69,9 @@ export function formatCompact(raw: bigint, decimals: number): string {
 /** percentage (0..100+, 3 decimals) of part/whole; null if whole is 0 */
 export function percent(part: bigint, whole: bigint): number | null {
   if (whole <= ZERO) return null
-  return Number((part * BigInt(100000)) / whole) / 1000
+  const p = Number((part * BigInt(100000)) / whole) / 1000
+  // > 100% only happens when today's balance no longer matches the balance at proposal time
+  return p > 100.05 ? null : p
 }
 
 export function fmtPct(p: number | null): string {
