@@ -11,25 +11,23 @@ Three things for voters:
 3. Telegram alerts for any Realm (`/watch <realm>`), including red warnings.
 Motivation: the 2026-09-25 Marinade attack. Fake "MIP-23" (said "routine upgrade, no parameter changes") actually upgraded the VSR vote-counting program; "MIP-24" drained 100% of treasury token accounts. The original UI showed only a generic yellow on MIP-23 and **nothing** on MIP-24 (verified in Chrome 2026-10-05).
 
-## State (2026-10-05 evening) — about 75% done
-| Part | Status | Where |
-|---|---|---|
-| P1 fork on Node 22, custom program IDs, branding, "unaudited" banner, mainnet read-only guard | done; Linux not verified | `scripts/run-with-env.js`, `package.json` scripts, app shell |
-| RPC proxy live/record/replay (public RPC returns 403 to browsers) | done | `scripts/rpc-proxy.js`, `README-DEMO.md` |
-| P2 VSR math (bit-exact vs program for 7 mainnet voters), VotingPowerCard, Lock-first UX, simulate before signing | done; UI not yet clicked through in a running app | `tools/vsr/`, `components/VotingPowerCard/`, `VoteStakeRegistry/` |
-| P3 safety engine + panel | engine + tests done (34 tests); panel committed but not visually verified; last commit de603f75 was WIP when the agent hit a limit | `tools/proposalSafety/`, `components/ProposalSafety/`, `fixtures/marinade/` |
-| P4 Telegram bot | done (52 tests, dry-run verified on Marinade); never run with a real token | `bots/telegram/` |
-| P5 VSR sanity check | done (function + test only; results are private, never publish) | `tools/vsr/sanityCheck.ts` |
-| Offline demo snapshot | NOT recorded yet | `demo/snapshot/rpc.json` (to create) |
-| Devnet Lock demo | NOT done | — |
+## State (2026-10-06) — about 90% done
+| Part | Status |
+|---|---|
+| P1 fork on Node 22 (jest 151 tests, tsc clean, next build OK on Windows), custom program IDs, fork branding + own design | done; Linux not verified |
+| RPC proxy live/record/replay; offline snapshot `demo/snapshot/rpc.json.gz` (replay 688/688) | done |
+| P2 VSR math (bit-exact, 7 voters), VotingPowerCard, Lock-first UX, simulate before signing | done; card needs a wallet, not clicked through live |
+| P3 safety engine + panel | done and verified live: MIP-23/24 red with plain-language text, benign proposal no red |
+| P4 Telegram bot | done; red alerts verified in dry-run; never run with a real token |
+| P5 VSR sanity check | done (function + test only; results private) |
+| Devnet Lock demo | NOT done (README-DEMO.md §5 describes the manual path) |
 
 ## Remaining work, in order
-1. `npx jest` (whole repo) and `yarn type-check`; fix anything broken by the parallel agents' merges.
-2. Run the app (`README-DEMO.md` §2) and visually check the ProposalSafetyPanel on MIP-23 `7pYWFt7aigkEU86nbxKM182t6xgVBz9ZaJ1gFzaYN1Zj`, MIP-24 `EpKkNUv5DcKgBd26sXYKmcMU2hBoA4DmPzD8m7b1bGY9` and benign `CrbL16mpZRFJwKqkMsnVjHRP44n422opfQ1pGRL6zGoz`. Required on screen: MIP-23 red "Description says: routine upgrade, no parameter changes. Actually: replaces the voting program"; MIP-24 red "Moves X MNDE (100% of the account) to an address this DAO never paid". Benign: no red. Make the panel show instruction-based findings immediately and the payment-history-based ones later (the history scan used to hang for minutes).
-3. Bot: confirm `bots/telegram/safety.ts` picks up `tools/proposalSafety/index.ts` (`yarn bot --dry-run --realm MNDE --last 5` must print red alerts for MIP-23/24).
-4. Record the offline snapshot (`README-DEMO.md` §3: `yarn rpc:record` + open the realm page, MIP-23, MIP-24, CrbL, own voting power), then verify `yarn demo` works with the network off. Check that the snapshot file does not contain the API key.
-5. Devnet Lock demo: devnet realm with VSR (or the docs path in `README-DEMO.md` §5); Lock flow signs only on devnet.
-6. Final report: what was built, what not and why, exact PowerShell commands for the demo. Keep CLAUDE.md updated; commit after each step.
+1. Confirm `yarn demo:start` works with the network off (offline replay in the browser). If a page hangs, check `curl http://localhost:8898/misses` and re-record that page with `yarn demo:record`.
+2. Devnet Lock demo: create a devnet realm with the VSR plugin (or use an existing one) and walk through Lock → voting power card → vote.
+3. Run the bot with a real token (`TELEGRAM_BOT_TOKEN` in .env), `/watch MNDE`.
+4. Verify on Linux: install, `npx jest`, `yarn build`.
+5. Optional: LLM phrasing of findings (rules decide; LLM only rephrases; description is untrusted).
 
 ## Environment notes
 - Windows + PowerShell for the team; Node 22; install: `yarn install --frozen-lockfile --ignore-engines --ignore-scripts`.

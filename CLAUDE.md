@@ -1,7 +1,7 @@
 # CLAUDE.md — Open governance UI (revived fork of Mythic-Project/governance-ui)
 
 Goal: voter-facing governance UI for SPL Governance, first-class support for Marinade DAO.
-Status: **Phase 1 (build) in progress.** Unaudited, evaluation-grade.
+Status: **Phase 1 built; demo-ready (see HANDOFF.md for open items).** Unaudited, evaluation-grade.
 
 ## Safety rules (hard)
 - Never custody funds; only build transactions the user signs. Simulate before signing.
@@ -77,3 +77,12 @@ Dev: Node 22, `yarn install --frozen-lockfile --ignore-engines --ignore-scripts`
 - Known gaps: castVote.ts:256-258 sends no vote ix when weight is 0; VSRVotingPower "Deposited" ignores expired cliffs; read-only mainnet guard may block lock/deposit on mainnet (intended for demo).
 - jsdom tests need `@jest-environment-options {"customExportConditions": ["node","node-addons"]}` (uuid ESM).
 - Handoff state and next steps: see HANDOFF.md.
+
+## Verified 2026-10-06
+- Full suite: `npx jest` 15 suites / 151 tests pass; `tsc --noEmit --skipLibCheck` clean; `next build` OK on Node 22 (Windows).
+- Live UI (prod build + Helius via proxy): MIP-23 panel = red "Replaces the program that counts votes", "hold-up 0", "description does not match" (Description says 'Routine…No parameter changes'. Actually: replaces the code of the voting program), plus upgrade buffer note. MIP-24 = 7 red (100% of treasury accounts to never-paid address, 189.7M MNDE total, description mismatch). Benign CrbL = yellow only (unknown program Kvau…, hold-up 0), no red.
+- Bot dry-run with engine: red danger alerts for MIP-23/24 only.
+- Offline snapshot: `demo/snapshot/rpc.json.gz` (gzip; raw JSON was 101 MB > GitHub limit). Replay verified (`yarn demo:verify`: 688/688).
+- Perf trap: `getLockTokensVotingPowerPerWallet` for "undecided" voters simulates one tx per member (Marinade ~18k); capped at 300 in hooks/useVoteRecords.ts.
+- Demo scripts set NEXT_PUBLIC_HELIUS_MAINNET_RPC to the proxy so the Helius key is never inlined into the client bundle (NEXT_PUBLIC_* are build-time).
+- Design: fork palette (slate + mint #3EE6B0), CSS background, shield logo + "Know what you vote for", framed Safety check panel.
