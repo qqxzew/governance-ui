@@ -31,6 +31,10 @@ config = withTM({
   // to a running `next dev` without clobbering its .next folder.
   distDir: process.env.NEXT_DIST_DIR || '.next',
 
+  // Self-contained server bundle (server.js + traced node_modules) for small hosts that
+  // cannot run `yarn install` / `next build` themselves (e.g. a 2 GB container).
+  ...(process.env.NEXT_STANDALONE ? { output: 'standalone' } : {}),
+
   // "Collecting page data" loads every page bundle in worker processes. With
   // one worker per CPU on a 16 GB laptop this swaps and hits the 60 s default
   // timeout ("Collecting page data ... is still timing out"). Fewer workers

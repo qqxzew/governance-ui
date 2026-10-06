@@ -36,7 +36,14 @@
     "deduplicate": "npx yarn-deduplicate",
     "bigint-fix": "cd node_modules/bigint-buffer && yarn rebuild && cd ../../",
     "postinstall": "echo '\\033[35mIf you just added a package, consider running `\\033[1m\\033[36;1myarn deduplicate` \\033[0m\\033[35mto check for duplicates!\\033[00m\n \\033[35malso make sure scripts run by new packages are reviewed and added in the allowScripts section. Then run `\\033[1m\\033[36;1myarn allow-scripts\\033[0m\\033[35m`!\\033[00m'",
-    "create-proposal": "ts-node cli/createProposalScript.ts"
+    "create-proposal": "ts-node cli/createProposalScript.ts",
+    "build:public": "node scripts/run-with-env.js REALM=MNDE NEXT_PUBLIC_MAINNET_RPC=/api/rpc NEXT_PUBLIC_HELIUS_MAINNET_RPC=/api/rpc NEXT_PUBLIC_READ_ONLY_MAINNET=true NEXT_DIST_DIR=.next-public NEXT_STANDALONE=1 NODE_OPTIONS=--max-old-space-size=8192 -- next build",
+    "start:public": "node scripts/run-with-env.js REALM=MNDE NEXT_DIST_DIR=.next-public -- next start -p 3000",
+    "lens:dev": "next dev lens -p 3100",
+    "lens:build": "next build lens",
+    "lens:start": "node lens/scripts/start.js",
+    "lens:offline": "node scripts/run-with-env.js LENS_OFFLINE=1 -- node lens/scripts/start.js",
+    "lens:snapshot": "node lens/scripts/snapshot.js"
   },
   "lint-staged": {
     "*.@(ts|tsx|js|jsx)": [
