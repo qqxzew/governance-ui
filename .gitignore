@@ -59,3 +59,7 @@ bots/telegram/data/
 # uncompressed demo snapshot (commit only rpc.json.gz)
 demo/snapshot/rpc.json
 demo/snapshot/*.tmp
+
+# lens app
+/lens/.next/
+/lens/.cache/
